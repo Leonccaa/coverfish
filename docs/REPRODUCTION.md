@@ -1,6 +1,6 @@
 # Reproduction
 
-## Documentation check
+## Repository check
 
 Clone this repository and run:
 
@@ -12,12 +12,137 @@ The check verifies required files, repository-relative links, frozen headline
 values, release identifiers, licence texts, and the absence of private paths or
 service identifiers. It does not download data or recompute paper estimates.
 
-## Data package
+## Pinned data downloader
 
 Use the immutable Hugging Face tag `rev023-rc2-20260714` or fixed revision
 `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`, rather than an unpinned moving branch.
 The package README, file map, `SHA256SUMS`, and offline verifiers define the expected
 inventory and integrity checks.
+
+The downloader embeds the fixed 24-file manifest. `plan` and `verify` use only the
+Python standard library and do not access the network. `download` additionally
+requires `huggingface_hub`:
+
+```bash
+python3 -m pip install "huggingface_hub>=0.34,<2"
+python3 scripts/download_release.py plan --profile smoke
+python3 scripts/download_release.py download --profile smoke --output coverfish-release
+python3 scripts/download_release.py verify --profile smoke --output coverfish-release
+```
+
+Every component profile includes the eight control files.
+
+| Profile | Files | Exact bytes | Purpose |
+| --- | ---: | ---: | --- |
+| `control` | 8 | 22,725 | Ledgers, checksums, package README, and S4 verifier |
+| `core` | 9 | 499,616,679 | Control files and metadata/index/code CORE |
+| `smoke` | 10 | 903,269,834 | Control files, CORE, and D0 model-smoke inputs |
+| `d0` | 9 | 403,675,880 | Q-INT development archive |
+| `e0` | 9 | 3,683,808,607 | QT26-QC primary-evaluation archive |
+| `s0` | 9 | 10,443,451,638 | iNat-RG Archive |
+| `s1` | 9 | 1,036,940,048 | FishBase R0 |
+| `s2` | 9 | 548,096,022 | USFWS |
+| `s3` | 9 | 80,676 | ANGFA pointer-only layer |
+| `s4` | 17 | 66,637,955,922 | Commons transport parts and controls |
+| `all` | 24 | 83,253,466,397 | Complete published surface |
+
+Profiles of 5 GB or more are refused unless `download` receives
+`--accept-large-download`. The program does not prompt, discover credentials, or
+fall back to a moving revision. A public release download does not require a Hub
+token.
+
+### Command contract
+
+- Successful operational commands exit `0`.
+- Invalid arguments exit `2`.
+- A missing optional dependency exits `3`.
+- A required large-download confirmation or insufficient capacity exits `4`.
+- A transfer/runtime failure exits `5`.
+- A size or SHA-256 failure exits `6`.
+- stdout contains one JSON document; progress is confined to stderr.
+
+`--help` and `--version` are the only human-text stdout modes. JSON schema
+`coverfish.download.v1` is intended for agents and workflow runners.
+
+## Extract the smoke inputs
+
+With GNU tar and zstd support:
+
+```bash
+mkdir -p artifacts/core artifacts/d0
+tar --zstd -xf \
+  coverfish-release/coverfish-rev023-core-metadata-index-code-rc2-20260714.tar.zst \
+  -C artifacts/core
+tar --zstd -xf \
+  coverfish-release/coverfish-rev023-D0-qint-development-rc2-20260714.tar.zst \
+  -C artifacts/d0
+```
+
+Archive-level SHA-256 must pass before extraction. The model verifier then checks
+the exact hashes of its extracted CORE inputs, D0 manifest, and selected image.
+
+## BioCLIP encoder and index smoke test
+
+The public model check is deliberately small. It re-encodes one byte-bearing D0
+image with the pinned BioCLIP 2.5 ViT-H/14 snapshot, compares the result with its
+frozen 1,024-dimensional fp16 row, and checks the top-1 result against all 19,144
+frozen species prototypes. It does not train a model, rebuild the gallery, pool
+Q-INT with QT26-QC, or claim to recompute every paper result.
+
+The paper's frozen scientific environment used CPython 3.10.12, NumPy 2.2.6,
+PyTorch 2.11.0+cu128, Torchvision 0.26.0+cu128, and OpenCLIP 3.3.0. For a safe
+portable CPU smoke test, install the corresponding base versions from the CPU
+wheel index:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install --index-url https://download.pytorch.org/whl/cpu \
+  torch==2.11.0 torchvision==0.26.0
+python3 -m pip install -r requirements-model.txt
+```
+
+This CPU-first sequence avoids implicitly installing or using an accelerator
+runtime. A CUDA-specific PyTorch wheel should be substituted only when accelerator
+use has been approved. The CPU wheels intentionally report
+`dependencies.frozen_match == false`; `--require-frozen-environment` requires the
+exact `+cu128` builds and is separate from a portable CPU smoke test.
+
+First run a network-free plan. It audits the input bytes and reports dependency and
+model readiness as JSON without importing PyTorch or OpenCLIP:
+
+```bash
+python3 scripts/verify_bioclip_pipeline.py plan \
+  --core-dir artifacts/core \
+  --d0-dir artifacts/d0 \
+  --model-dir coverfish-model
+```
+
+The pinned model contributes a 3,944,517,804-byte safetensors file and a 560-byte
+configuration. The first networked run therefore requires explicit consent:
+
+```bash
+python3 scripts/verify_bioclip_pipeline.py run \
+  --core-dir artifacts/core \
+  --d0-dir artifacts/d0 \
+  --model-dir coverfish-model \
+  --device cpu \
+  --accept-model-download
+```
+
+Subsequent runs can add `--offline`. CPU is the safe default, and CUDA is used only
+when `--device cuda` is explicit. `--require-frozen-environment` converts any
+declared version mismatch into an error. The default comparison requires cosine
+similarity at least `0.9999`, maximum absolute element difference at most `0.005`,
+norm error at most `0.002`, and identical top-1 prototype.
+
+The model tool uses JSON schema `coverfish.bioclip-smoke.v1` and the same exit codes
+as the downloader, plus exit `7` for a completed but failed numerical comparison.
+It reports only release identifiers, file hashes, dependency versions, device
+category, thresholds, and scientific check results. It does not collect usernames,
+hostnames, device model names, environment variables, or absolute paths.
+
+## Public package layers
 
 The public package separates:
 

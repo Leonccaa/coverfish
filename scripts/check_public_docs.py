@@ -4,9 +4,9 @@
 from __future__ import annotations
 
 import re
+import runpy
 import sys
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,6 +22,13 @@ REQUIRED_FILES = (
     "docs/DATA_AVAILABILITY.md",
     "docs/REPRODUCTION.md",
     "docs/RIGHTS_AND_LICENSING.md",
+    "AGENTS.md",
+    ".gitignore",
+    "requirements-model.txt",
+    "scripts/download_release.py",
+    "scripts/verify_bioclip_pipeline.py",
+    "tests/test_download_release.py",
+    "tests/test_verify_bioclip_pipeline.py",
 )
 
 REQUIRED_README_TEXT = (
@@ -44,6 +51,8 @@ REQUIRED_README_TEXT = (
     "Liang Li",
     "Apache-2.0",
     "CC BY 4.0",
+    "download_release.py",
+    "verify_bioclip_pipeline.py",
 )
 
 STALE_OR_UNSUPPORTED_TEXT = (
@@ -55,7 +64,7 @@ STALE_OR_UNSUPPORTED_TEXT = (
     "python scripts/download_index.py",
     "python scripts/query.py",
     "A preprint and DOI are in preparation. For now, please cite",
-    "author       = {Li, Leon and collaborators}",
+    "author       = {",
     "COVER-Fish-Val | Public seed",
     "NOT UPLOADED",
     "selected publication design is Zenodo",
@@ -85,8 +94,8 @@ STALE_OR_UNSUPPORTED_TEXT = (
     "pushing the local alignment commit",
     "Inspected public repository baseline",
     "Local review branch",
-    "Leon approved",
-    "Leon explicitly accepted",
+    "approved the project-authored validation/reproduction code",
+    "explicitly accepted this record",
     "author-accepted",
     "X1 metadata",
     "X4-lite",
@@ -98,17 +107,40 @@ STALE_OR_UNSUPPORTED_TEXT = (
 )
 
 PRIVATE_PATTERNS = (
-    re.compile(r"/(?:home|mnt)/", re.IGNORECASE),
-    re.compile(r"\b(?:fish|llm|nas|service-hub)\.lan\b", re.IGNORECASE),
+    re.compile(r"/(?:home|mnt|Users)/", re.IGNORECASE),
+    re.compile(r"\b[A-Z]:\\Users\\", re.IGNORECASE),
+    re.compile(r"\b[a-z0-9][a-z0-9.-]*\.lan\b", re.IGNORECASE),
     re.compile(r"\b(?:10|172\.(?:1[6-9]|2\d|3[01])|192\.168)(?:\.\d{1,3}){2}\b"),
     re.compile(r"(?:api[_-]?key|access[_-]?token|private[_-]?key)\s*[:=]", re.IGNORECASE),
 )
 
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 
+FORBIDDEN_RUNTIME_INTROSPECTION = (
+    "socket.gethostname(",
+    "platform.node(",
+    "getpass.getuser(",
+    "Path.home(",
+    "os.environ",
+    "os.getenv(",
+    "nvidia-smi",
+    "torch.cuda.get_device_name(",
+)
+
 
 def markdown_files() -> list[Path]:
     return sorted(path for path in ROOT.rglob("*.md") if ".git" not in path.parts)
+
+
+def public_text_files() -> list[Path]:
+    suffixes = {".md", ".py", ".txt"}
+    return sorted(
+        path
+        for path in ROOT.rglob("*")
+        if path.is_file()
+        and ".git" not in path.parts
+        and (path.suffix in suffixes or path.name.startswith("requirements"))
+    )
 
 
 def check_required_files(errors: list[str]) -> None:
@@ -138,13 +170,53 @@ def check_relative_links(errors: list[str]) -> None:
 
 
 def check_public_boundary(errors: list[str]) -> None:
-    for path in markdown_files():
+    for path in public_text_files():
         text = path.read_text(encoding="utf-8")
         for pattern in PRIVATE_PATTERNS:
             if match := pattern.search(text):
                 errors.append(
                     f"{path.relative_to(ROOT)}: private-boundary match: {match.group(0)!r}"
                 )
+        if path.suffix == ".py" and path.name != "check_public_docs.py":
+            for token in FORBIDDEN_RUNTIME_INTROSPECTION:
+                if token in text:
+                    errors.append(
+                        f"{path.relative_to(ROOT)}: forbidden runtime introspection: {token!r}"
+                    )
+
+
+def check_tool_contract(errors: list[str]) -> None:
+    downloader = runpy.run_path(str(ROOT / "scripts/download_release.py"))
+    files = downloader["FILES"]
+    if len(files) != 24:
+        errors.append(f"download manifest has {len(files)} files, expected 24")
+    if sum(item.bytes for item in files) != 83_253_466_397:
+        errors.append("download manifest byte total is not 83,253,466,397")
+    if downloader["DATASET_REVISION"] != "0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8":
+        errors.append("downloader fixed dataset revision changed")
+    for profile, expected in {"control": 22_725, "smoke": 903_269_834}.items():
+        specs = downloader["specs_for_profile"](profile)
+        if sum(item.bytes for item in specs) != expected:
+            errors.append(f"downloader {profile} profile byte total changed")
+
+    verifier = runpy.run_path(str(ROOT / "scripts/verify_bioclip_pipeline.py"))
+    if verifier["MODEL_REVISION"] != "191d741545e4c741cdef4b22c6eb69c945c1e592":
+        errors.append("BioCLIP fixed model revision changed")
+    if verifier["EXPECTED_QUERY_ROWS"] != 1044:
+        errors.append("BioCLIP verifier D0 row count changed")
+    if verifier["EXPECTED_PROTOTYPE_ROWS"] != 19144:
+        errors.append("BioCLIP verifier prototype row count changed")
+    if verifier["FROZEN_DEPENDENCIES"].get("torch") != "2.11.0+cu128":
+        errors.append("BioCLIP verifier frozen torch build changed")
+    if verifier["FROZEN_DEPENDENCIES"].get("torchvision") != "0.26.0+cu128":
+        errors.append("BioCLIP verifier frozen torchvision build changed")
+    if verifier["DEFAULT_RECORD_ID"] != "coverfish-qint-v1.0-0721":
+        errors.append("BioCLIP verifier default record changed")
+    args = verifier["build_parser"]().parse_args(
+        ["run", "--core-dir", "core", "--d0-dir", "d0"]
+    )
+    if args.device != "cpu":
+        errors.append("BioCLIP verifier no longer defaults to CPU")
 
 
 def check_claims(errors: list[str]) -> None:
@@ -216,6 +288,7 @@ def main() -> int:
         check_relative_links(errors)
         check_public_boundary(errors)
         check_claims(errors)
+        check_tool_contract(errors)
 
     if errors:
         print(f"FAIL: {len(errors)} documentation check(s) failed", file=sys.stderr)
@@ -229,6 +302,7 @@ def main() -> int:
     print("PASS: frozen paper values and public dataset identifiers are present")
     print("PASS: enumerated stale or unsupported public wording is absent")
     print("PASS: Apache-2.0 and CC-BY-4.0 texts and mixed-rights scope are present")
+    print("PASS: downloader and BioCLIP verifier identities and manifest totals are fixed")
     return 0
 
 

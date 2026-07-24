@@ -55,6 +55,31 @@ documentation, scientific scope, citation, rights information, and verification
 code. Large image archives and tensor arrays are distributed through the DOI-bound
 dataset, not through GitHub.
 
+## Safe automated use
+
+Inspect an exact download plan without network access or local writes:
+
+```bash
+python3 scripts/download_release.py plan --profile smoke
+```
+
+Operational commands return one stable JSON document on stdout and send progress
+to stderr. The `smoke` profile contains control files, CORE, and D0 (903,269,834
+bytes). The complete 83,253,466,397-byte surface and every profile of 5 GB or more
+require the explicit `--accept-large-download` flag.
+
+After extracting CORE and D0, audit a byte-bound query and the pinned BioCLIP model
+requirements without downloading the model:
+
+```bash
+python3 scripts/verify_bioclip_pipeline.py plan \
+  --core-dir artifacts/core \
+  --d0-dir artifacts/d0
+```
+
+See [Reproduction](docs/REPRODUCTION.md) for complete commands and [Agent operating
+contract](AGENTS.md) for machine-facing status and safety rules.
+
 ## Evidence boundaries
 
 - The 615 intervention taxa were deliberately selected; they are not a random or
@@ -81,6 +106,9 @@ See [Scientific scope](docs/SCIENTIFIC_SCOPE.md) and
 - [Rights and licensing](docs/RIGHTS_AND_LICENSING.md)
 - [Citation](CITATION.md)
 - [Version map](VERSION.md)
+- [Agent operating contract](AGENTS.md)
+- [`download_release.py`](scripts/download_release.py): pinned, profile-aware downloader
+- [`verify_bioclip_pipeline.py`](scripts/verify_bioclip_pipeline.py): one-record encoder/index smoke test
 
 Run the documentation consistency check with:
 

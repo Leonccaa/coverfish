@@ -9,10 +9,15 @@
 | Hugging Face revision | `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8` |
 | Dataset DOI | `10.57967/hf/9706` |
 | DataCite version | `0ee47b2` |
+| Public downloader and model-smoke CLI schema | `1.0.0` |
 
-REV024 changes release and citation metadata only. It retains the frozen REV023
-queries, gallery membership, prototypes, embeddings, predictions, scores, figures,
-benchmark rosters, and reported results.
+The companion manuscript's REV024 changes release and citation metadata only. It
+retains the frozen REV023 queries, gallery membership, prototypes, embeddings,
+predictions, scores, figures, benchmark rosters, and reported results.
+
+The public CLIs are post-publication convenience tools bound to the existing fixed
+dataset and model revisions. Their addition does not create a new scientific data
+version or modify a frozen paper object.
 
 The GitHub baseline is intentionally lightweight. The immutable data-version
 identity is the Hugging Face tag and DOI; image archives and tensor arrays are not

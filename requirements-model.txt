@@ -1,0 +1,10 @@
+# Scientific base versions. The paper's exact torch builds were +cu128;
+# choose the wheel source explicitly, as documented in docs/REPRODUCTION.md.
+numpy==2.2.6
+open_clip_torch==3.3.0
+torch==2.11.0
+torchvision==0.26.0
+
+# Transport and image-I/O dependencies; these do not change the frozen model ID.
+huggingface_hub>=0.34,<2
+Pillow>=10,<13
