@@ -1,0 +1,43 @@
+# Rights and licensing
+
+## Project-authored licences
+
+Project-authored verification and reproduction software is available under
+Apache-2.0. Project-authored explanatory documentation is available under CC BY
+4.0. The exact
+scope and official licence texts are in [LICENSE.md](../LICENSE.md).
+
+These are scoped grants, not a repository-wide data licence. They apply only where
+the COVER-Fish project owns the relevant rights, do not automatically cover mixed
+schemas/manifests unless explicitly marked, and do not override third-party image
+or metadata terms.
+
+## Row-level data semantics
+
+COVER-Fish uses row-level rights evidence rather than one blanket dataset licence.
+
+- `bytes` means an exact payload was selected and locally bound to its size and
+  SHA-256 under the recorded row-level evidence. It is not a blanket relicense.
+- `pointer` means metadata, attribution fields where approved, and an upstream
+  locator only. It is not a redistributed image.
+- `byte-complete` is a local integrity class, not a public-availability or legal
+  conclusion.
+- `pointer-reconstructable` requires release-time fetch and exact-hash evidence;
+  the current count is zero.
+- `pointer-fragile` means no current successful reconstruction receipt exists.
+
+ANGFA remains pointer-only unless separate permission is obtained. Other source
+packs can contain a mixture of byte and pointer rows. Aggregate source names or
+counts never replace the row-level terms in an authorized release manifest.
+
+## Current repository boundary
+
+This GitHub documentation baseline contains no third-party image bytes, source-row
+manifests, upstream contributor identity values, embedding arrays, or private
+database records. The public Hugging Face package is a separate mixed-rights
+surface; this GitHub baseline neither mirrors its payloads nor relicenses them.
+
+Before any data-facing file is added here, the public field allowlist, attribution
+surface, source terms, and exact immutable release binding must pass review. Rights
+classification is an engineering aid and not a substitute for source terms or legal
+advice.
