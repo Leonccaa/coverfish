@@ -64,6 +64,24 @@ token.
 `--help` and `--version` are the only human-text stdout modes. JSON schema
 `coverfish.download.v1` is intended for agents and workflow runners.
 
+## Pointer reconstruction audit
+
+The repository also provides a byte-discarding, dated availability audit for
+all `42,387` pointer rows. Its offline fixture, CORE download, single-run,
+fixed two-shard, retry, and receipt-verification commands are in [Pointer
+reconstruction audit](POINTER_AUDIT.md).
+
+Allow approximately four to five days for one complete initial run or two to
+three days for the fixed two-shard workflow. Transient responses and later
+dated retry windows can extend those estimates. The audit does not change the
+frozen dataset or its reproducibility tiers.
+
+The complete dated receipt and the direct-only 18-row recheck are available
+under immutable Hugging Face tag
+[`pointer-audit-v04-20260726`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/pointer-audit-v04-20260726/supplements/pointer-audit-v04-20260726).
+Download and checksum instructions are in [Pointer reconstruction
+audit](POINTER_AUDIT.md#published-receipts).
+
 ## Extract the smoke inputs
 
 With GNU tar and zstd support:

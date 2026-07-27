@@ -10,6 +10,7 @@ and where that strategy fails across source and query domains.
 [DOI](https://doi.org/10.57967/hf/9706) ·
 [Data availability](docs/DATA_AVAILABILITY.md) ·
 [Reproduction](docs/REPRODUCTION.md) ·
+[Pointer audit](docs/POINTER_AUDIT.md) ·
 [Citation](CITATION.md)
 
 ## Study at a glance
@@ -50,6 +51,14 @@ The archive release core contains 117,640 records: 75,253 byte-bearing rows and
 42,387 pointer rows. The active projection contains 115,780 records. ANGFA remains
 a 451-row pointer-only source; pointer records are not redistributed image pixels.
 
+The published dated pointer-audit supplement observes 41,917/42,387 archive
+pointers as SHA-256 byte-exact (98.8912%). A direct-only second observation
+confirmed that the same 18 unavailable URLs again returned HTTP 404. The
+complete receipts are fixed by supplement tag
+[`pointer-audit-v04-20260726`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/pointer-audit-v04-20260726/supplements/pointer-audit-v04-20260726).
+This later observation does not rewrite the frozen release tiers; see [Pointer
+audit](docs/POINTER_AUDIT.md).
+
 This GitHub repository is the lightweight REV024 baseline for project
 documentation, scientific scope, citation, rights information, and verification
 code. Large image archives and tensor arrays are distributed through the DOI-bound
@@ -80,6 +89,11 @@ python3 scripts/verify_bioclip_pipeline.py plan \
 See [Reproduction](docs/REPRODUCTION.md) for complete commands and [Agent operating
 contract](AGENTS.md) for machine-facing status and safety rules.
 
+The optional dated pointer audit takes approximately **4--5 days** as one
+complete run or **2--3 days** in fixed two-shard mode; transient responses and
+later retry windows can extend those estimates. See [Pointer
+audit](docs/POINTER_AUDIT.md).
+
 ## Evidence boundaries
 
 - The 615 intervention taxa were deliberately selected; they are not a random or
@@ -103,6 +117,7 @@ See [Scientific scope](docs/SCIENTIFIC_SCOPE.md) and
 - [Benchmark roles](docs/BENCHMARKS.md)
 - [Data availability](docs/DATA_AVAILABILITY.md)
 - [Reproduction](docs/REPRODUCTION.md)
+- [Pointer reconstruction audit](docs/POINTER_AUDIT.md)
 - [Rights and licensing](docs/RIGHTS_AND_LICENSING.md)
 - [Citation](CITATION.md)
 - [Version map](VERSION.md)

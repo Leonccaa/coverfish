@@ -1,0 +1,31 @@
+{
+  "schema": "coverfish.pointer-host-policy.v1",
+  "user_agent_product": "COVER-Fish-pointer-audit/1.0",
+  "public_contact_url": "https://github.com/Leonccaa/coverfish",
+  "allowed_schemes": ["https"],
+  "allowed_ports": [443],
+  "max_response_bytes": 67108864,
+  "max_image_pixels": 25000000,
+  "max_image_dimension": 6000,
+  "image_decode_timeout_seconds": 15,
+  "robots_cache_seconds": 86400,
+  "request_timeout_seconds": 30,
+  "max_request_wall_seconds": 120,
+  "max_fallback_images_per_row": 3,
+  "hosts": {
+    "api.inaturalist.org": {"min_interval_seconds": 1.0, "policy_state": "allow_with_limits", "roles": ["resolver_api"]},
+    "commons.wikimedia.org": {"min_interval_seconds": 1.0, "policy_state": "allow_with_limits", "roles": ["landing", "resolver_api"]},
+    "conabio.inaturalist.org": {"min_interval_seconds": 2.0, "policy_state": "blocked", "roles": ["landing"]},
+    "db.angfa.org.au": {"min_interval_seconds": 10.0, "policy_state": "landing_only", "roles": ["image", "landing"]},
+    "fishbase.se": {"min_interval_seconds": 2.0, "policy_state": "allow_with_limits", "rate_group": "fishbase_media", "max_bytes_per_hour": 2000000000, "max_bytes_per_day": 10000000000, "roles": ["image", "landing"], "full_run_contact_recommended": true},
+    "fws.gov": {"min_interval_seconds": 1.0, "policy_state": "allow_with_limits", "roles": ["image", "landing"]},
+    "inaturalist-open-data.s3.amazonaws.com": {"min_interval_seconds": 2.0, "policy_state": "allow_with_limits", "rate_group": "inaturalist_media", "max_bytes_per_hour": 4000000000, "max_bytes_per_day": 20000000000, "roles": ["image"]},
+    "inaturalist.ca": {"min_interval_seconds": 2.0, "policy_state": "blocked", "roles": ["landing"]},
+    "naturewatch.org.nz": {"min_interval_seconds": 2.0, "policy_state": "blocked", "roles": ["landing"]},
+    "static.inaturalist.org": {"min_interval_seconds": 2.0, "policy_state": "allow_with_limits", "rate_group": "inaturalist_media", "max_bytes_per_hour": 4000000000, "max_bytes_per_day": 20000000000, "roles": ["image"]},
+    "upload.wikimedia.org": {"min_interval_seconds": 1.0, "policy_state": "allow_with_limits", "roles": ["image"]},
+    "www.fishbase.se": {"min_interval_seconds": 2.0, "policy_state": "allow_with_limits", "rate_group": "fishbase_media", "max_bytes_per_hour": 2000000000, "max_bytes_per_day": 10000000000, "roles": ["image", "landing"], "full_run_contact_recommended": true},
+    "www.fws.gov": {"min_interval_seconds": 1.0, "policy_state": "allow_with_limits", "roles": ["image", "landing"]},
+    "www.inaturalist.org": {"min_interval_seconds": 2.0, "policy_state": "blocked", "roles": ["landing"]}
+  }
+}

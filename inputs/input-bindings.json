@@ -1,0 +1,44 @@
+{
+  "schema": "coverfish.pointer-input-bindings.v1",
+  "dataset": {
+    "doi": "10.57967/hf/9706",
+    "repository": "COVER-Fish/COVER-Fish",
+    "revision": "0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8",
+    "tag": "rev023-rc2-20260714"
+  },
+  "expected": {
+    "active_staging_rows": 115780,
+    "active_byte_complete_rows": 73835,
+    "active_pointer_rows": 41945,
+    "archive_pointer_rows": 42387,
+    "e0_byte_complete_rows": 6719,
+    "e0_pointer_rows": 0,
+    "r0_rows": 49140,
+    "r0_byte_complete_rows": 15052,
+    "r0_pointer_rows": 34088,
+    "retired_pointer_rows": 442
+  },
+  "pilot": {
+    "seed": "coverfish-pointer-pilot-v1",
+    "rows": 800,
+    "sha256": "cf7011d1744b0fb383c82953a019d0ba967c6fcf886b466010abcb072d21fbd0"
+  },
+  "manifests": [
+    {"component": "S0", "id_field": "record_id", "path": "packs/S0/pointers.tsv", "rows": 7461, "sha256": "a95e8d04cbcb5035dc59339b5c11abad1cf2c24bd283ec091b2326de43a87f9f"},
+    {"component": "S1", "id_field": "record_id", "path": "packs/S1/pointers.tsv", "rows": 34088, "sha256": "f6ca665d472d247578f16903562da11406c373ecd1c5899c5ad6625018a9e8cf"},
+    {"component": "S2", "id_field": "record_id", "path": "packs/S2/pointers.tsv", "rows": 3, "sha256": "3f501f694acd3b1a41ee567b9f8e3a6ac7b3c50a0f292ca05114d1ec6591282e"},
+    {"component": "S3", "id_field": "record_id", "path": "packs/S3/pointers.tsv", "rows": 451, "sha256": "5ef936128356b63b4688278e36f057076780f9404c7085db871c02530533e73f"},
+    {"component": "S4", "id_field": "record_id", "path": "packs/S4/pointers.tsv", "rows": 132, "sha256": "6a043e12bfa63cf080a1827a16c086868ac01eeff640b25bf7a2acbe23f4e858"},
+    {"component": "D0", "id_field": "public_id", "path": "packs/D0/pointers.tsv", "rows": 252, "sha256": "b9c2ad57df18b10144fb54c3fe1a30746707482f36bbb0c2d094511c8cf49bd7"}
+  ],
+  "container_ledgers": {
+    "files_tsv": {"path": "FILES.tsv", "sha256": "95e4489d56ab00f814954b1c99e66398bd2f717ff763fd6b8a56d70458a21630"},
+    "sha256sums": {"path": "SHA256SUMS", "sha256": "f521caf23aa1806132f781a5b6dd215908fea0ec367258c7717e499fb309bc10"}
+  },
+  "e0": {
+    "bytes_path": "packs/E0/bytes.tsv",
+    "bytes_sha256": "acbc85857da640c539679ad52243b7503995c58ddfc4e6cf602df6f3ed8b99b9",
+    "pointers_path": "packs/E0/pointers.tsv",
+    "pointers_sha256": "87565e38fbfe0160c2be5e68f566a54d58267e6aa0cb328516130f5ffb1f46ad"
+  }
+}

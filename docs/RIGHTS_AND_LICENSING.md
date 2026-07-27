@@ -12,6 +12,11 @@ the COVER-Fish project owns the relevant rights, do not automatically cover mixe
 schemas/manifests unless explicitly marked, and do not override third-party image
 or metadata terms.
 
+Project-authored pointer-audit software and tests are covered by Apache-2.0.
+The checked-in minimal pointer fixture is wholly synthetic Apache-2.0 test
+material. This does not grant the same licence to production bindings,
+manifests, URLs, receipts, or third-party rows.
+
 ## Row-level data semantics
 
 COVER-Fish uses row-level rights evidence rather than one blanket dataset licence.
@@ -36,6 +41,10 @@ This GitHub documentation baseline contains no third-party image bytes, source-r
 manifests, upstream contributor identity values, embedding arrays, or private
 database records. The public Hugging Face package is a separate mixed-rights
 surface; this GitHub baseline neither mirrors its payloads nor relicenses them.
+
+The pointer tools retrieve bounded response bodies only for in-memory integrity
+and diagnostic checks and discard them. A receipt records dated observations;
+it does not redistribute the response body or grant permission to reuse it.
 
 Before any data-facing file is added here, the public field allowlist, attribution
 surface, source terms, and exact immutable release binding must pass review. Rights

@@ -1,0 +1,2 @@
+completion_id	record_id	component	window_id	invocation_id	first_attempt_index	last_attempt_index	attempt_count	resolution_protocol_complete	resolution_protocol_status	resolver_candidate_count	fallback_attempt_count	completed_at_utc
+fixture-completion-0	fixture-active-byte-exact	S1	fixture-shard0-w1	fixture-shard0-inv1	1	1	1	true	direct_exact	0	0	2026-07-24T00:00:01Z

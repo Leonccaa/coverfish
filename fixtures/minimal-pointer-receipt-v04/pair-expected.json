@@ -1,0 +1,23 @@
+{
+  "aggregate": {
+    "active_rows": 1,
+    "attempt_bytes": 1801,
+    "attempt_rows": 3,
+    "completed_rows": 2,
+    "diagnostic_near_rows": 1,
+    "exact_rows": 1,
+    "outcomes": {
+      "byte_exact": 1,
+      "visual_near_candidate_d0_2": 1
+    },
+    "retired_rows": 1
+  },
+  "coverage_complete": true,
+  "scientific_status": "PENDING",
+  "schema": "coverfish.pointer-audit-minimal-pair.v1",
+  "shard_rows": [
+    1,
+    1
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,1822 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Leonccaa/coverfish/schemas/pointer-audit-schema-v2.json",
+  "title": "COVER-Fish pointer audit v2 scientific and execution artifact catalog",
+  "description": "Structural catalog for frozen v0.2 serial receipts and additive v0.3 process receipts. TSV record schemas describe decoded row objects; orderedHeaders are the exact physical TSV headers.",
+  "schema_version": "coverfish.pointer-audit.v2",
+  "receiptProfiles": {
+    "serial_v02": {
+      "producer_version": "0.2.0",
+      "contract_schema": "coverfish.pointer-audit-contract.v1",
+      "execution": "serial",
+      "verifier": "software/verify_pointer_receipt.py",
+      "existing_outputs_frozen": true
+    },
+    "process_v03": {
+      "runner_version": "0.3.0",
+      "frozen_producer_version": "0.2.0",
+      "contract_schema": "coverfish.pointer-audit-contract.v2",
+      "execution_profile_schema": "coverfish.pointer-parallel-execution-profile.v1",
+      "execution_summary_schema": "coverfish.pointer-parallel-execution-summary.v1",
+      "process_start_method": "spawn",
+      "maximum_inflight": 5,
+      "scheduler_schema": "coverfish.pointer-parallel-scheduler.v1",
+      "scheduler_algorithm": "stable_round_robin_primary_source_lane_v1",
+      "worker_quiescence_timeout_seconds": 900,
+      "new_empty_output_required": true,
+      "base_verifier_sha256": "d00676f7c4367b4c9ba6d4758c9468be8f61f9d4317b683ced0aa0b0fd3edf08",
+      "verifier": "software/verify_pointer_receipt_parallel_v03.py"
+    }
+  },
+  "licenseScope": {
+    "projectAuthoredSoftware": "Apache-2.0",
+    "projectAuthoredDocumentationAndSchema": "CC-BY-4.0",
+    "mixedSourceInputsManifestsReceiptsAndData": "NO_BLANKET_LICENSE_ROW_LEVEL_RIGHTS_CONTROL",
+    "notice": "../LICENSE.md",
+    "rightsGuide": "../docs/RIGHTS_AND_LICENSING.md"
+  },
+  "constants": {
+    "archive_pointer_rows": 42387,
+    "active_pointer_rows": 41945,
+    "retired_pointer_rows": 442,
+    "active_staging_rows": 115780,
+    "active_byte_complete_rows": 73835,
+    "r0_rows": 49140,
+    "r0_byte_complete_rows": 15052,
+    "r0_pointer_rows": 34088,
+    "e0_byte_complete_rows": 6719,
+    "e0_pointer_rows": 0,
+    "strict_success_class": "byte_exact",
+    "bytes_retained": false,
+    "gpu_used": false,
+    "maximum_decoded_image_pixels": 25000000,
+    "maximum_image_dimension": 6000,
+    "frozen_known_maximum_image_pixels_approximate": 12800000,
+    "frozen_known_maximum_image_dimension": 4384,
+    "finality_minimum_distinct_windows": 3,
+    "finality_minimum_distinct_utc_dates": 3,
+    "finality_minimum_elapsed_hours": 48,
+    "required_python_implementation": "CPython",
+    "required_python_major_minor": "3.10",
+    "d0_photo_landing_archive_rows": 23,
+    "d0_photo_landing_pilot_rows": 7
+  },
+  "verificationRules": {
+    "parallel_base_verifier_binding": "exact_sha256",
+    "parallel_base_check_roster": "exact_ordered_nonempty_scope_roster_with_declared_tail_recovery_variant",
+    "parallel_only_adaptable_base_failure": "attempt_full_semantics.global_time_order",
+    "parallel_private_base_order_adapter_bound": "set_bound_original_contract_exact_private_health_reorder_only",
+    "parallel_private_base_view_content_preserved": "sorted_record_to_row_content_hash_equal_before_base_verifier",
+    "parallel_unlisted_missing_duplicate_reordered_or_extra_checks": "fail_closed",
+    "parallel_receipt_fields_no_local_identity": "scan_root_json_tsv_keys_and_scalar_values_except_requested_check_output_fail_closed",
+    "parallel_terminal_copy_portability": "portable_epoch_no_persistent_local_output_identity",
+    "parallel_active_work_tree_portability": "not_portable_recover_in_place_under_exclusive_lease"
+  },
+  "componentHostBoundaries": {
+    "image": {
+      "S0": ["static.inaturalist.org", "inaturalist-open-data.s3.amazonaws.com"],
+      "S1": ["fishbase.se", "www.fishbase.se"],
+      "S2": ["fws.gov", "www.fws.gov"],
+      "S3": [],
+      "S4": ["upload.wikimedia.org"],
+      "D0": ["static.inaturalist.org", "inaturalist-open-data.s3.amazonaws.com"]
+    },
+    "resolverAndRobots": {
+      "S0": ["api.inaturalist.org", "www.inaturalist.org"],
+      "S1": ["fishbase.se", "www.fishbase.se"],
+      "S2": ["fws.gov", "www.fws.gov"],
+      "S3": ["db.angfa.org.au"],
+      "S4": ["commons.wikimedia.org"],
+      "D0": ["api.inaturalist.org", "www.inaturalist.org"]
+    }
+  },
+  "knownPolicyBoundaries": {
+    "D0_taxon_photo_landing": {
+      "archive_rows": 23,
+      "pilot_rows": 7,
+      "frozen_pointer_shape": "https://www.inaturalist.org/taxa/<taxon_id>",
+      "derived_resolver_shape": "https://www.inaturalist.org/photos/<photo_id>",
+      "photo_id_source": "frozen source_image_url",
+      "required_host": "www.inaturalist.org",
+      "current_status": "pending_policy",
+      "measured_health": false
+    },
+    "S3_image_fetch": {
+      "archive_rows": 451,
+      "current_status": "pending_policy",
+      "measured_image_health": false
+    }
+  },
+  "transactionRules": [
+    "pointer-health-attempts.tsv is append-only",
+    "a completion commits one logically contiguous attempt-index range for one record, window, and invocation; global file adjacency and global timestamp order are not scientific invariants",
+    "a disposition and completion are mutually exclusive for an attempt",
+    "window_id and invocation_id are one-to-one and a window_id is never reused",
+    "v0.2 fsync-appends each evaluated attempt to the canonical ledger before the next request",
+    "v0.3 fsync-appends evaluated receipt rows to a private per-record spool; the coordinator alone canonicalizes robots, attempts, then completion before worker-slot reuse",
+    "v0.3 physical canonical order follows worker-completion events while deterministic IDs and record-local attempt indexes define logical order",
+    "v0.3 completed spools are canonicalized and durable incomplete attempts are dispositioned before resume; a terminal receipt has no .parallel-work-v03 tree",
+    "v0.3 workers hold a shared stable-inode lease for their full process lifetime; recovery obtains the exclusive lease with a fail-closed deadline and durably fences every stale invocation before reading or removing a spool",
+    "v0.3 shared-worker and exclusive-recovery lease acquisition has a 900-second fail-closed timeout",
+    "v0.3 worker epoch metadata is portable and binds the immutable contract, invocation, window, and start time; the private runtime epoch additionally binds the local output identity and is removed with the work tree",
+    "v0.3 schedules eligible rows by primary source_host to rate_group-or-host lanes, preserves frozen order within lanes, and interleaves lanes in stable first-appearance round-robin order",
+    "v0.3 recovery-ledger tail damage is recorded in immutable JSON before truncation without recursively appending to the damaged ledger",
+    "v0.3 spool-recovery actions, artifact basenames, and row-identity presence use an exact fail-closed allowlist, including zero-byte prewrite removal",
+    "v0.3 wrapper requires the exact ordered nonempty scope base-check roster, allowing only the declared tail-recovery present-or-absent variant and failing closed on every other roster difference",
+    "v0.3 wrapper may adapt archive producer order to frozen base-verifier physical-source order only in a disposable private view after unique set equality, exact producer-order health rebuild, exact original contract, and equal sorted source/private-view content hashes",
+    "v0.3 terminal JSON and TSV receipt fields exclude local filesystem identities; private path-device-inode identity disappears with the work tree",
+    "a crash before evaluation and fsync is an unavoidable unreceipted boundary",
+    "pointer-health.tsv and strict rates use completion-covered attempts only",
+    "best-attempt selection orders first by identity priority and then by numeric attempt_index, never by second-resolution timestamp",
+    "abandoned attempts remain in physical attempt totals but never affect health",
+    "tail recovery records hash and length but never retains the raw discarded fragment",
+    "recognized orphan atomic-write temporary files are hash-and-length receipted before removal; unrecognized temporary names fail closed",
+    "pHash classes are diagnostic and never become recovery success",
+    "byte_exact skips decode and pHash",
+    "empty_response is retryable",
+    "each counted finality window must have a completion whose two-tier route-attempt protocol is complete",
+    "route status precedence is safety first, then direct policy or local blockers, then resolver outcome; a later resolver result cannot mask an earlier blocker",
+    "only committed direct_image and fallback_image attempts from protocol-complete windows can contribute finality observations",
+    "policy pending, local bandwidth deferral, oversize local response cap, and safety review do not contribute finality observations",
+    "any physical attempt safety_block, including an abandoned attempt, or any robots safety_block forces summary status FAIL",
+    "component-specific image and resolver/robots host maps constrain every request and redirect",
+    "credential-like query keys fail closed before network access and receipt URLs redact their values",
+    "rate-group byte caps include persistent in-flight reservations made before each response-body read",
+    "live audit and summarize receipts require and bind CPython 3.10.x",
+    "summary host_rate_policy and transient_backoff exactly equal the immutable audit contract",
+    "attempt_aggregations derive from all physical attempts, including abandoned attempts",
+    "response pixels are never retained in canonical ledgers, v0.3 private spools, or inter-process messages",
+    "v0.3 request starts share a flock-protected rate-state v3 and robots cache fills are per-invocation cross-process singleflight"
+  ],
+  "artifacts": {
+    "attempts": {
+      "path": "pointer-health-attempts.tsv",
+      "format": "tsv",
+      "appendOnly": true,
+      "primaryKey": ["attempt_id"],
+      "orderedHeaders": [
+        "attempt_id",
+        "record_id",
+        "component",
+        "active",
+        "window_id",
+        "invocation_id",
+        "attempt_index",
+        "checked_at_utc",
+        "request_kind",
+        "resolved_via",
+        "url_requested",
+        "url_final",
+        "host",
+        "policy_state",
+        "robots_status",
+        "transport_status",
+        "http_status",
+        "redirect_count",
+        "redirect_chain_json",
+        "retry_after",
+        "content_type",
+        "content_type_image",
+        "magic_type",
+        "decode_status",
+        "actual_bytes",
+        "actual_width",
+        "actual_height",
+        "actual_sha256",
+        "actual_phash_hex64",
+        "phash_distance",
+        "sha256_match",
+        "identity_class",
+        "error_code",
+        "bytes_retained"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/attemptRecord"
+      }
+    },
+    "health": {
+      "path": "pointer-health.tsv",
+      "format": "tsv",
+      "derivedFrom": [
+        "frozen scope",
+        "pointer-health-attempts.tsv",
+        "record-completions.tsv"
+      ],
+      "committedAttemptsOnly": true,
+      "oneRowPerScopeRecord": true,
+      "primaryKey": ["record_id"],
+      "orderedHeaders": [
+        "record_id",
+        "component",
+        "active",
+        "active_projection_status",
+        "canonical_taxon_key",
+        "fishbase25_speccode",
+        "scientific_name",
+        "source_image_url",
+        "pointer_url",
+        "source_host",
+        "expected_width",
+        "expected_height",
+        "expected_sha256",
+        "expected_phash_hex64",
+        "license_normalized",
+        "license_tier",
+        "release_mode",
+        "attribution",
+        "attempts",
+        "first_checked_at_utc",
+        "last_checked_at_utc",
+        "resolved_via",
+        "final_url",
+        "http_status",
+        "content_type",
+        "magic_type",
+        "actual_bytes",
+        "actual_width",
+        "actual_height",
+        "actual_sha256",
+        "actual_phash_hex64",
+        "phash_distance",
+        "sha256_match",
+        "final_class",
+        "retryable",
+        "resolution_protocol_complete",
+        "resolution_protocol_status",
+        "multiwindow_protocol_applies",
+        "distinct_observation_windows",
+        "distinct_observation_utc_dates",
+        "observation_elapsed_hours",
+        "observed_in_declared_final_window",
+        "latest_observation_is_declared_final",
+        "finality_status",
+        "possible_placeholder_cluster",
+        "bytes_retained"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/healthRecord"
+      }
+    },
+    "completions": {
+      "path": "record-completions.tsv",
+      "format": "tsv",
+      "appendOnly": true,
+      "primaryKey": ["completion_id"],
+      "orderedHeaders": [
+        "completion_id",
+        "record_id",
+        "component",
+        "window_id",
+        "invocation_id",
+        "first_attempt_index",
+        "last_attempt_index",
+        "attempt_count",
+        "resolution_protocol_complete",
+        "resolution_protocol_status",
+        "resolver_candidate_count",
+        "fallback_attempt_count",
+        "completed_at_utc"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/completionRecord"
+      }
+    },
+    "dispositions": {
+      "path": "attempt-dispositions.tsv",
+      "format": "tsv",
+      "appendOnly": true,
+      "primaryKey": ["attempt_id"],
+      "orderedHeaders": [
+        "attempt_id",
+        "record_id",
+        "window_id",
+        "invocation_id",
+        "disposition",
+        "recorded_at_utc"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/dispositionRecord"
+      }
+    },
+    "tailRecoveries": {
+      "path": "tail-recoveries.tsv",
+      "format": "tsv",
+      "cumulativeAtomicRewrite": true,
+      "rawFragmentRetained": false,
+      "primaryKey": ["recovery_id"],
+      "orderedHeaders": [
+        "recovery_id",
+        "ledger",
+        "detected_at_utc",
+        "original_size_bytes",
+        "retained_size_bytes",
+        "discarded_fragment_bytes",
+        "discarded_fragment_sha256"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/tailRecoveryRecord"
+      }
+    },
+    "robots": {
+      "path": "robots.tsv",
+      "format": "tsv",
+      "orderedHeaders": [
+        "window_id",
+        "invocation_id",
+        "checked_at_utc",
+        "host",
+        "robots_url",
+        "http_status",
+        "fetch_status",
+        "robots_state",
+        "error_code",
+        "redirect_count",
+        "redirect_chain_json",
+        "sha256"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/robotsRecord"
+      }
+    },
+    "atomicTempRecoveries": {
+      "path": "atomic-temp-recoveries.tsv",
+      "format": "tsv",
+      "appendOnly": true,
+      "rawTemporaryBytesRetained": false,
+      "primaryKey": ["recovery_id"],
+      "orderedHeaders": [
+        "recovery_id",
+        "detected_at_utc",
+        "temporary_name",
+        "target_name",
+        "size_bytes",
+        "sha256"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/atomicTempRecoveryRecord"
+      }
+    },
+    "contract": {
+      "path": "audit-contract.json",
+      "format": "json",
+      "immutable": true,
+      "recordSchema": {
+        "$ref": "#/$defs/auditContract"
+      }
+    },
+    "parallelExecutionProfile": {
+      "path": "parallel-execution-profile-v03.json",
+      "format": "json",
+      "immutable": true,
+      "contractSchema": "coverfish.pointer-audit-contract.v2",
+      "recordSchema": {
+        "$ref": "#/$defs/parallelExecutionProfile"
+      }
+    },
+    "parallelSpoolRecoveries": {
+      "path": "parallel-spool-recoveries.tsv",
+      "format": "tsv",
+      "appendOnly": true,
+      "contractSchema": "coverfish.pointer-audit-contract.v2",
+      "rawFragmentRetained": false,
+      "primaryKey": ["recovery_id"],
+      "orderedHeaders": [
+        "recovery_id",
+        "window_id",
+        "invocation_id",
+        "record_id",
+        "spool_name",
+        "artifact_name",
+        "action",
+        "detected_at_utc",
+        "original_size_bytes",
+        "retained_size_bytes",
+        "discarded_fragment_bytes",
+        "discarded_fragment_sha256",
+        "requires_safety_review"
+      ],
+      "recordSchema": {
+        "$ref": "#/$defs/parallelSpoolRecoveryRecord"
+      }
+    },
+    "parallelRecoveryLedgerTailReceipts": {
+      "pathPattern": "parallel-recovery-ledger-tail-<recovery_id>.json",
+      "format": "json",
+      "immutable": true,
+      "contractSchema": "coverfish.pointer-audit-contract.v2",
+      "rawFragmentRetained": false,
+      "recordSchema": {
+        "$ref": "#/$defs/parallelRecoveryLedgerTailReceipt"
+      }
+    },
+    "runMetadata": {
+      "pathPattern": "run-metadata-<window_id>-<invocation_id>.json",
+      "format": "json",
+      "onePerInvocation": true,
+      "recordSchema": {
+        "$ref": "#/$defs/runMetadata"
+      }
+    },
+    "parallelExecutionSummary": {
+      "pathPattern": "parallel-execution-<window_id>-<invocation_id>.json",
+      "format": "json",
+      "onePerInvocation": true,
+      "contractSchema": "coverfish.pointer-audit-contract.v2",
+      "recordSchema": {
+        "$ref": "#/$defs/parallelExecutionSummary"
+      }
+    },
+    "summary": {
+      "path": "pointer-health-summary.json",
+      "format": "json",
+      "deterministicDerivedArtifact": true,
+      "recordSchema": {
+        "$ref": "#/$defs/summary"
+      }
+    }
+  },
+  "$defs": {
+    "component": {
+      "type": "string",
+      "enum": ["S0", "S1", "S2", "S3", "S4", "D0"]
+    },
+    "boolString": {
+      "type": "string",
+      "enum": ["true", "false"]
+    },
+    "boolStringOrEmpty": {
+      "type": "string",
+      "enum": ["", "true", "false"]
+    },
+    "nonnegativeIntegerString": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$"
+    },
+    "positiveIntegerString": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "nonnegativeIntegerStringOrEmpty": {
+      "type": "string",
+      "pattern": "^$|^(0|[1-9][0-9]*)$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sha256OrEmpty": {
+      "type": "string",
+      "pattern": "^$|^[0-9a-f]{64}$"
+    },
+    "phash64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "phash64OrEmpty": {
+      "type": "string",
+      "pattern": "^$|^[0-9a-f]{16}$"
+    },
+    "idHex24": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
+    },
+    "invocationId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16}$"
+    },
+    "windowId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "pattern": "^https://"
+    },
+    "httpOrHttpsUrl": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
+    "httpsUrlOrEmpty": {
+      "type": "string",
+      "pattern": "^$|^https://"
+    },
+    "requestKind": {
+      "type": "string",
+      "enum": ["direct_image", "resolver_api", "resolver_page", "fallback_image"]
+    },
+    "resolvedVia": {
+      "type": "string",
+      "enum": ["direct", "source_api", "landing_page", "photo_landing"]
+    },
+    "resolvedViaOrEmpty": {
+      "type": "string",
+      "enum": ["", "direct", "source_api", "landing_page", "photo_landing"]
+    },
+    "policyState": {
+      "type": "string",
+      "enum": ["allow_with_limits", "blocked", "landing_only", "pending_permission"]
+    },
+    "policyStateOrEmpty": {
+      "type": "string",
+      "enum": ["", "allow_with_limits", "blocked", "landing_only", "pending_permission"]
+    },
+    "robotsStatus": {
+      "type": "string",
+      "enum": ["", "allowed", "allowed_no_robots", "disallowed", "unavailable_disallow"]
+    },
+    "transportStatus": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "redirect",
+        "policy_pending",
+        "robots_disallowed",
+        "robots_unavailable",
+        "not_found",
+        "access_denied",
+        "rate_limited",
+        "server_error",
+        "timeout",
+        "dns_error",
+        "tls_error",
+        "oversize",
+        "bandwidth_budget_pending",
+        "safety_block",
+        "http_error",
+        "network_error"
+      ]
+    },
+    "decodeStatus": {
+      "type": "string",
+      "enum": ["not_attempted", "skipped_byte_exact", "not_image_magic", "decoded", "decode_error"]
+    },
+    "identityClass": {
+      "type": "string",
+      "enum": [
+        "byte_exact",
+        "visual_near_candidate_d0_2",
+        "visual_related_candidate_d3_6",
+        "content_changed_candidate_d_gt6",
+        "decode_error",
+        "empty_response",
+        "non_image",
+        "not_found_404_410",
+        "access_denied_401_403",
+        "rate_limited_429",
+        "transient_5xx",
+        "timeout",
+        "dns_error",
+        "tls_error",
+        "oversize",
+        "bandwidth_budget_pending",
+        "robots_disallowed",
+        "robots_unavailable",
+        "policy_pending_permission",
+        "safety_review_required",
+        "network_or_transport_error",
+        "resolver_response",
+        "resolver_error",
+        "not_evaluated"
+      ]
+    },
+    "healthFinalClass": {
+      "type": "string",
+      "enum": [
+        "byte_exact",
+        "visual_near_candidate_d0_2",
+        "visual_related_candidate_d3_6",
+        "content_changed_candidate_d_gt6",
+        "decode_error",
+        "empty_response",
+        "non_image",
+        "not_found_404_410",
+        "access_denied_401_403",
+        "rate_limited_429",
+        "transient_5xx",
+        "timeout",
+        "dns_error",
+        "tls_error",
+        "oversize",
+        "bandwidth_budget_pending",
+        "robots_disallowed",
+        "robots_unavailable",
+        "policy_pending_permission",
+        "safety_review_required",
+        "network_or_transport_error",
+        "not_audited"
+      ]
+    },
+    "resolutionProtocolStatus": {
+      "type": "string",
+      "enum": [
+        "direct_exact",
+        "fallback_exact",
+        "resolver_access_or_absence_observed",
+        "resolver_no_candidate",
+        "exhausted_nonexact",
+        "pending_resolver_adapter",
+        "resolver_transient_observed",
+        "resolver_invalid_response_observed",
+        "resolver_http_error_observed",
+        "fallback_transient_observed",
+        "pending_local_response_cap",
+        "pending_policy",
+        "pending_local_deferral",
+        "pending_candidate_cap",
+        "fail_safety_review"
+      ]
+    },
+    "resolutionProtocolStatusOrNotAudited": {
+      "anyOf": [
+        {"$ref": "#/$defs/resolutionProtocolStatus"},
+        {"type": "string", "const": "not_audited"}
+      ]
+    },
+    "attemptRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempt_id",
+        "record_id",
+        "component",
+        "active",
+        "window_id",
+        "invocation_id",
+        "attempt_index",
+        "checked_at_utc",
+        "request_kind",
+        "resolved_via",
+        "url_requested",
+        "url_final",
+        "host",
+        "policy_state",
+        "robots_status",
+        "transport_status",
+        "http_status",
+        "redirect_count",
+        "redirect_chain_json",
+        "retry_after",
+        "content_type",
+        "content_type_image",
+        "magic_type",
+        "decode_status",
+        "actual_bytes",
+        "actual_width",
+        "actual_height",
+        "actual_sha256",
+        "actual_phash_hex64",
+        "phash_distance",
+        "sha256_match",
+        "identity_class",
+        "error_code",
+        "bytes_retained"
+      ],
+      "properties": {
+        "attempt_id": {"$ref": "#/$defs/idHex24"},
+        "record_id": {"type": "string", "minLength": 1},
+        "component": {"$ref": "#/$defs/component"},
+        "active": {"$ref": "#/$defs/boolString"},
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "attempt_index": {"$ref": "#/$defs/positiveIntegerString"},
+        "checked_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "request_kind": {"$ref": "#/$defs/requestKind"},
+        "resolved_via": {"$ref": "#/$defs/resolvedVia"},
+        "url_requested": {"$ref": "#/$defs/httpsUrl"},
+        "url_final": {"$ref": "#/$defs/httpsUrlOrEmpty"},
+        "host": {"type": "string"},
+        "policy_state": {"$ref": "#/$defs/policyStateOrEmpty"},
+        "robots_status": {"$ref": "#/$defs/robotsStatus"},
+        "transport_status": {"$ref": "#/$defs/transportStatus"},
+        "http_status": {"type": "string", "pattern": "^$|^[1-5][0-9]{2}$"},
+        "redirect_count": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "redirect_chain_json": {"type": "string", "contentMediaType": "application/json"},
+        "retry_after": {"type": "string"},
+        "content_type": {"type": "string"},
+        "content_type_image": {"$ref": "#/$defs/boolString"},
+        "magic_type": {"type": "string"},
+        "decode_status": {"$ref": "#/$defs/decodeStatus"},
+        "actual_bytes": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "actual_width": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "actual_height": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "actual_sha256": {"$ref": "#/$defs/sha256OrEmpty"},
+        "actual_phash_hex64": {"$ref": "#/$defs/phash64OrEmpty"},
+        "phash_distance": {"type": "string", "pattern": "^$|^(0|[1-5]?[0-9]|6[0-4])$"},
+        "sha256_match": {"$ref": "#/$defs/boolStringOrEmpty"},
+        "identity_class": {"$ref": "#/$defs/identityClass"},
+        "error_code": {"type": "string"},
+        "bytes_retained": {"type": "string", "const": "false"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"identity_class": {"const": "byte_exact"}}, "required": ["identity_class"]},
+          "then": {
+            "properties": {
+              "sha256_match": {"const": "true"},
+              "decode_status": {"const": "skipped_byte_exact"},
+              "actual_phash_hex64": {"const": ""},
+              "phash_distance": {"const": ""}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "identity_class": {
+                "enum": [
+                  "visual_near_candidate_d0_2",
+                  "visual_related_candidate_d3_6",
+                  "content_changed_candidate_d_gt6"
+                ]
+              }
+            },
+            "required": ["identity_class"]
+          },
+          "then": {
+            "properties": {
+              "sha256_match": {"const": "false"},
+              "decode_status": {"const": "decoded"},
+              "actual_phash_hex64": {"$ref": "#/$defs/phash64"}
+            }
+          }
+        }
+      ]
+    },
+    "healthRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "component",
+        "active",
+        "active_projection_status",
+        "canonical_taxon_key",
+        "fishbase25_speccode",
+        "scientific_name",
+        "source_image_url",
+        "pointer_url",
+        "source_host",
+        "expected_width",
+        "expected_height",
+        "expected_sha256",
+        "expected_phash_hex64",
+        "license_normalized",
+        "license_tier",
+        "release_mode",
+        "attribution",
+        "attempts",
+        "first_checked_at_utc",
+        "last_checked_at_utc",
+        "resolved_via",
+        "final_url",
+        "http_status",
+        "content_type",
+        "magic_type",
+        "actual_bytes",
+        "actual_width",
+        "actual_height",
+        "actual_sha256",
+        "actual_phash_hex64",
+        "phash_distance",
+        "sha256_match",
+        "final_class",
+        "retryable",
+        "resolution_protocol_complete",
+        "resolution_protocol_status",
+        "multiwindow_protocol_applies",
+        "distinct_observation_windows",
+        "distinct_observation_utc_dates",
+        "observation_elapsed_hours",
+        "observed_in_declared_final_window",
+        "latest_observation_is_declared_final",
+        "finality_status",
+        "possible_placeholder_cluster",
+        "bytes_retained"
+      ],
+      "properties": {
+        "record_id": {"type": "string", "minLength": 1},
+        "component": {"$ref": "#/$defs/component"},
+        "active": {"$ref": "#/$defs/boolString"},
+        "active_projection_status": {"type": "string"},
+        "canonical_taxon_key": {"type": "string"},
+        "fishbase25_speccode": {"type": "string"},
+        "scientific_name": {"type": "string"},
+        "source_image_url": {"$ref": "#/$defs/httpsUrl"},
+        "pointer_url": {"$ref": "#/$defs/httpOrHttpsUrl"},
+        "source_host": {"type": "string", "minLength": 1},
+        "expected_width": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "expected_height": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "expected_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_phash_hex64": {"$ref": "#/$defs/phash64"},
+        "license_normalized": {"type": "string"},
+        "license_tier": {"type": "string"},
+        "release_mode": {"type": "string"},
+        "attribution": {"type": "string"},
+        "attempts": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "first_checked_at_utc": {"type": "string", "pattern": "^$|^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "last_checked_at_utc": {"type": "string", "pattern": "^$|^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "resolved_via": {"$ref": "#/$defs/resolvedViaOrEmpty"},
+        "final_url": {"$ref": "#/$defs/httpsUrlOrEmpty"},
+        "http_status": {"type": "string", "pattern": "^$|^[1-5][0-9]{2}$"},
+        "content_type": {"type": "string"},
+        "magic_type": {"type": "string"},
+        "actual_bytes": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "actual_width": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "actual_height": {"$ref": "#/$defs/nonnegativeIntegerStringOrEmpty"},
+        "actual_sha256": {"$ref": "#/$defs/sha256OrEmpty"},
+        "actual_phash_hex64": {"$ref": "#/$defs/phash64OrEmpty"},
+        "phash_distance": {"type": "string", "pattern": "^$|^(0|[1-5]?[0-9]|6[0-4])$"},
+        "sha256_match": {"$ref": "#/$defs/boolStringOrEmpty"},
+        "final_class": {"$ref": "#/$defs/healthFinalClass"},
+        "retryable": {"$ref": "#/$defs/boolString"},
+        "resolution_protocol_complete": {"$ref": "#/$defs/boolString"},
+        "resolution_protocol_status": {"$ref": "#/$defs/resolutionProtocolStatusOrNotAudited"},
+        "multiwindow_protocol_applies": {"$ref": "#/$defs/boolString"},
+        "distinct_observation_windows": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "distinct_observation_utc_dates": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "observation_elapsed_hours": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{6}$"},
+        "observed_in_declared_final_window": {"$ref": "#/$defs/boolString"},
+        "latest_observation_is_declared_final": {"$ref": "#/$defs/boolString"},
+        "finality_status": {
+          "type": "string",
+          "enum": ["not_applicable_exact", "pending_policy", "pending_local_deferral", "fail_safety_review", "pending_not_audited", "pending_resolution_protocol", "pending", "satisfied"]
+        },
+        "possible_placeholder_cluster": {"$ref": "#/$defs/boolStringOrEmpty"},
+        "bytes_retained": {"type": "string", "const": "false"}
+      }
+    },
+    "completionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completion_id",
+        "record_id",
+        "component",
+        "window_id",
+        "invocation_id",
+        "first_attempt_index",
+        "last_attempt_index",
+        "attempt_count",
+        "resolution_protocol_complete",
+        "resolution_protocol_status",
+        "resolver_candidate_count",
+        "fallback_attempt_count",
+        "completed_at_utc"
+      ],
+      "properties": {
+        "completion_id": {"$ref": "#/$defs/idHex24"},
+        "record_id": {"type": "string", "minLength": 1},
+        "component": {"$ref": "#/$defs/component"},
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "first_attempt_index": {"$ref": "#/$defs/positiveIntegerString"},
+        "last_attempt_index": {"$ref": "#/$defs/positiveIntegerString"},
+        "attempt_count": {"$ref": "#/$defs/positiveIntegerString"},
+        "resolution_protocol_complete": {"$ref": "#/$defs/boolString"},
+        "resolution_protocol_status": {"$ref": "#/$defs/resolutionProtocolStatus"},
+        "resolver_candidate_count": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "fallback_attempt_count": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "completed_at_utc": {"$ref": "#/$defs/utcTimestamp"}
+      },
+      "description": "Cross-field invariants: attempt_count equals the inclusive attempt range; fallback_attempt_count is no greater than resolver_candidate_count; resolution_protocol_complete is true exactly for a complete route-attempt status. completion_id binds the range and all four route-protocol fields."
+    },
+    "dispositionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempt_id",
+        "record_id",
+        "window_id",
+        "invocation_id",
+        "disposition",
+        "recorded_at_utc"
+      ],
+      "properties": {
+        "attempt_id": {"$ref": "#/$defs/idHex24"},
+        "record_id": {"type": "string", "minLength": 1},
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "disposition": {"type": "string", "const": "abandoned_incomplete_transaction"},
+        "recorded_at_utc": {"$ref": "#/$defs/utcTimestamp"}
+      }
+    },
+    "tailRecoveryRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recovery_id",
+        "ledger",
+        "detected_at_utc",
+        "original_size_bytes",
+        "retained_size_bytes",
+        "discarded_fragment_bytes",
+        "discarded_fragment_sha256"
+      ],
+      "properties": {
+        "recovery_id": {"$ref": "#/$defs/idHex24"},
+        "ledger": {
+          "type": "string",
+          "enum": [
+            "pointer-health-attempts.tsv",
+            "record-completions.tsv",
+            "attempt-dispositions.tsv",
+            "robots.tsv",
+            "atomic-temp-recoveries.tsv"
+          ]
+        },
+        "detected_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "original_size_bytes": {"$ref": "#/$defs/positiveIntegerString"},
+        "retained_size_bytes": {"$ref": "#/$defs/positiveIntegerString"},
+        "discarded_fragment_bytes": {"$ref": "#/$defs/positiveIntegerString"},
+        "discarded_fragment_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "description": "Cross-field invariant: original_size_bytes equals retained_size_bytes plus discarded_fragment_bytes. The raw discarded fragment is not retained."
+    },
+    "parallelSpoolRecoveryRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recovery_id",
+        "window_id",
+        "invocation_id",
+        "record_id",
+        "spool_name",
+        "artifact_name",
+        "action",
+        "detected_at_utc",
+        "original_size_bytes",
+        "retained_size_bytes",
+        "discarded_fragment_bytes",
+        "discarded_fragment_sha256",
+        "requires_safety_review"
+      ],
+      "properties": {
+        "recovery_id": {"$ref": "#/$defs/idHex24"},
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "record_id": {"type": "string"},
+        "spool_name": {"type": "string", "pattern": "^$|^[0-9]{8}-[0-9a-f]{16}$"},
+        "artifact_name": {
+          "type": "string",
+          "oneOf": [
+            {
+              "enum": [
+                "pointer-health-attempts.tsv",
+                "record-completions.tsv",
+                "robots.tsv",
+                "invocation-work.json"
+              ]
+            },
+            {
+              "pattern": "^\\.(?:invocation-work\\.json|robots-cache\\.json|worker-result\\.json|disposition-stamp\\.json)\\.[A-Za-z0-9_-]+\\.tmp$"
+            }
+          ]
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "truncate_incomplete_tsv_tail",
+            "discard_empty_tsv_prewrite",
+            "promote_complete_json_temp",
+            "discard_duplicate_complete_json_temp",
+            "quarantine_incomplete_json_temp",
+            "discard_prestart_missing_manifest"
+          ]
+        },
+        "detected_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "original_size_bytes": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "retained_size_bytes": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "discarded_fragment_bytes": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "discarded_fragment_sha256": {"$ref": "#/$defs/sha256"},
+        "requires_safety_review": {"$ref": "#/$defs/boolString"}
+      },
+      "description": "Hash-bound v0.3 private-spool recovery evidence. artifact_name is basename-only and restricted to the three spool TSV names, invocation-work.json, or one of four recognized .target.<safe>.tmp forms; action and row-identity pairing are verified fail-closed. TSV tail removal requires original=retained+discarded and discarded>0; discard_empty_tsv_prewrite requires all sizes zero; incomplete attempt or robots tails require safety review. Complete JSON temporaries are promoted or deduplicated, incomplete JSON temporaries are quarantined by deletion after hash receipt, and no raw fragment is retained."
+    },
+    "robotsRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_id",
+        "invocation_id",
+        "checked_at_utc",
+        "host",
+        "robots_url",
+        "http_status",
+        "fetch_status",
+        "robots_state",
+        "error_code",
+        "redirect_count",
+        "redirect_chain_json",
+        "sha256"
+      ],
+      "properties": {
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "checked_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "host": {"type": "string", "minLength": 1},
+        "robots_url": {"$ref": "#/$defs/httpsUrl"},
+        "http_status": {
+          "oneOf": [
+            {"type": "integer", "minimum": 100, "maximum": 599},
+            {"type": "string", "pattern": "^$|^[1-5][0-9]{2}$"}
+          ]
+        },
+        "fetch_status": {"$ref": "#/$defs/transportStatus"},
+        "robots_state": {
+          "type": "string",
+          "enum": ["parsed", "not_present_allow", "unavailable_disallow", "parse_error"]
+        },
+        "error_code": {"type": "string"},
+        "redirect_count": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "redirect_chain_json": {"type": "string", "contentMediaType": "application/json"},
+        "sha256": {"$ref": "#/$defs/sha256OrEmpty"}
+      }
+    },
+    "parallelRecoveryLedgerTailReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "recovery_id",
+        "ledger",
+        "detected_at_utc",
+        "original_size_bytes",
+        "retained_size_bytes",
+        "discarded_fragment_bytes",
+        "discarded_fragment_sha256"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-parallel-recovery-ledger-tail.v1"},
+        "recovery_id": {"$ref": "#/$defs/idHex24"},
+        "ledger": {"type": "string", "const": "parallel-spool-recoveries.tsv"},
+        "detected_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "original_size_bytes": {"type": "integer", "minimum": 1},
+        "retained_size_bytes": {"type": "integer", "minimum": 1},
+        "discarded_fragment_bytes": {"type": "integer", "minimum": 1},
+        "discarded_fragment_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "description": "Immutable non-recursive receipt fsynced before truncating a partial final row from parallel-spool-recoveries.tsv. recovery_id binds ledger name, size closure, and fragment hash; original_size_bytes equals retained_size_bytes plus discarded_fragment_bytes, a complete TSV header remains, and raw fragment bytes are not retained."
+    },
+    "atomicTempRecoveryRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recovery_id",
+        "detected_at_utc",
+        "temporary_name",
+        "target_name",
+        "size_bytes",
+        "sha256"
+      ],
+      "properties": {
+        "recovery_id": {"$ref": "#/$defs/idHex24"},
+        "detected_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "temporary_name": {"type": "string", "pattern": "^\\..+\\.tmp$"},
+        "target_name": {"type": "string", "minLength": 1},
+        "size_bytes": {"$ref": "#/$defs/nonnegativeIntegerString"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "description": "A recognized orphan from an interrupted atomic rewrite. recovery_id binds temporary_name, target_name, size_bytes, and SHA-256; the temporary bytes are removed only after this row is fsync-appended. Unknown temporary-name shapes fail closed."
+    },
+    "dependencyReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["installed", "expected", "ready"],
+      "properties": {
+        "installed": {"type": "object", "additionalProperties": {"type": ["string", "null"]}},
+        "expected": {"type": "object", "additionalProperties": {"type": "string"}},
+        "ready": {"type": "boolean"}
+      }
+    },
+    "runtimeReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "python_implementation",
+        "python_version",
+        "required_implementation",
+        "required_major_minor",
+        "ready"
+      ],
+      "properties": {
+        "python_implementation": {"type": "string", "const": "CPython"},
+        "python_version": {"type": "string", "pattern": "^3\\.10(?:\\.|$)"},
+        "required_implementation": {"type": "string", "const": "CPython"},
+        "required_major_minor": {"type": "string", "const": "3.10"},
+        "ready": {"type": "boolean", "const": true}
+      }
+    },
+    "datasetBinding": {
+      "type": "object",
+      "required": ["doi", "repository", "revision", "tag"],
+      "properties": {
+        "doi": {"type": "string"},
+        "repository": {"type": "string"},
+        "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "tag": {"type": "string"}
+      }
+    },
+    "hostRateEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_state", "roles", "min_interval_seconds"],
+      "properties": {
+        "policy_state": {"$ref": "#/$defs/policyState"},
+        "roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "enum": ["image", "landing", "resolver_api"]}
+        },
+        "min_interval_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 60},
+        "rate_group": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,63}$"},
+        "max_bytes_per_hour": {"type": "integer", "minimum": 1},
+        "max_bytes_per_day": {"type": "integer", "minimum": 1},
+        "full_run_contact_recommended": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["rate_group"]},
+          "then": {"required": ["max_bytes_per_hour", "max_bytes_per_day"]}
+        }
+      ]
+    },
+    "hostRatePolicy": {
+      "type": "object",
+      "propertyNames": {"type": "string", "pattern": "^[a-z0-9](?:[a-z0-9.-]{0,251}[a-z0-9])?$"},
+      "additionalProperties": {"$ref": "#/$defs/hostRateEntry"},
+      "description": "When rate_group is present, both max_bytes_per_hour and max_bytes_per_day are required and the group interval is shared across member hosts."
+    },
+    "transientBackoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy",
+        "base",
+        "circuit_threshold",
+        "circuit_min_seconds",
+        "maximum_seconds",
+        "reset_on_nontransient_response"
+      ],
+      "properties": {
+        "strategy": {"type": "string", "const": "exponential_per_host_persisted"},
+        "base": {"type": "string", "const": "configured_host_min_interval_seconds"},
+        "circuit_threshold": {"type": "integer", "const": 3},
+        "circuit_min_seconds": {"type": "integer", "const": 300},
+        "maximum_seconds": {"type": "integer", "const": 900},
+        "reset_on_nontransient_response": {"type": "boolean", "const": true}
+      }
+    },
+    "parallelScheduler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "algorithm",
+        "lane_key",
+        "lane_order",
+        "lane_internal_order",
+        "max_rows_semantics"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-parallel-scheduler.v1"},
+        "algorithm": {"type": "string", "const": "stable_round_robin_primary_source_lane_v1"},
+        "lane_key": {"type": "string", "const": "host_policy.rate_group_or_primary_source_host"},
+        "lane_order": {"type": "string", "const": "first_appearance_in_frozen_candidate_order"},
+        "lane_internal_order": {"type": "string", "const": "frozen_candidate_order"},
+        "max_rows_semantics": {"type": "string", "const": "truncate_after_full_deterministic_schedule"}
+      }
+    },
+    "attemptAggregations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["by_host_and_transport", "by_transport_status", "by_error_code", "by_redirect_count"],
+      "properties": {
+        "by_host_and_transport": {"$ref": "#/$defs/nestedCountMap"},
+        "by_transport_status": {"$ref": "#/$defs/countMap"},
+        "by_error_code": {"$ref": "#/$defs/countMap"},
+        "by_redirect_count": {"$ref": "#/$defs/countMap"}
+      }
+    },
+    "auditContract": {
+      "oneOf": [
+        {"$ref": "#/$defs/auditContractV1"},
+        {"$ref": "#/$defs/auditContractV2"}
+      ]
+    },
+    "auditContractV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "tool_version",
+        "tool_sha256",
+        "requirements_sha256",
+        "dependencies",
+        "runtime",
+        "phash_algorithm",
+        "scope",
+        "scope_rows",
+        "scope_ids_sha256",
+        "dataset",
+        "bindings_sha256",
+        "manifest_sha256",
+        "policy_sha256",
+        "host_rate_policy",
+        "transient_backoff",
+        "user_agent",
+        "bytes_retained",
+        "gpu_used"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-audit-contract.v1"},
+        "tool_version": {"type": "string"},
+        "tool_sha256": {"$ref": "#/$defs/sha256"},
+        "requirements_sha256": {"$ref": "#/$defs/sha256"},
+        "dependencies": {"$ref": "#/$defs/dependencyReport"},
+        "runtime": {"$ref": "#/$defs/runtimeReport"},
+        "phash_algorithm": {"type": "string"},
+        "scope": {"type": "string", "enum": ["pilot", "archive"]},
+        "scope_rows": {"type": "integer", "minimum": 0},
+        "scope_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "dataset": {"$ref": "#/$defs/datasetBinding"},
+        "bindings_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "policy_sha256": {"$ref": "#/$defs/sha256"},
+        "host_rate_policy": {"$ref": "#/$defs/hostRatePolicy"},
+        "transient_backoff": {"$ref": "#/$defs/transientBackoff"},
+        "user_agent": {"type": "string", "minLength": 1},
+        "bytes_retained": {"type": "boolean", "const": false},
+        "gpu_used": {"type": "boolean", "const": false}
+      }
+    },
+    "auditContractV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "tool_version",
+        "tool_sha256",
+        "requirements_sha256",
+        "dependencies",
+        "runtime",
+        "phash_algorithm",
+        "scope",
+        "scope_rows",
+        "scope_ids_sha256",
+        "dataset",
+        "bindings_sha256",
+        "manifest_sha256",
+        "policy_sha256",
+        "host_rate_policy",
+        "transient_backoff",
+        "execution_profile_sha256",
+        "execution_profile_schema",
+        "parallel_scheduler",
+        "user_agent",
+        "bytes_retained",
+        "gpu_used"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-audit-contract.v2"},
+        "tool_version": {"type": "string", "const": "0.2.0"},
+        "tool_sha256": {"type": "string", "const": "14a0b11025256f22a79883d7337687cfd7b02af8646fb38e6351209cc7bca522"},
+        "requirements_sha256": {"$ref": "#/$defs/sha256"},
+        "dependencies": {"$ref": "#/$defs/dependencyReport"},
+        "runtime": {"$ref": "#/$defs/runtimeReport"},
+        "phash_algorithm": {"type": "string"},
+        "scope": {"type": "string", "enum": ["pilot", "archive"]},
+        "scope_rows": {"type": "integer", "minimum": 0},
+        "scope_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "dataset": {"$ref": "#/$defs/datasetBinding"},
+        "bindings_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "policy_sha256": {"type": "string", "const": "2987dffde63b8a0fa1e4a795142267d964d6644bd23d22c35b76b337112687a9"},
+        "host_rate_policy": {"$ref": "#/$defs/hostRatePolicy"},
+        "transient_backoff": {"$ref": "#/$defs/transientBackoff"},
+        "execution_profile_sha256": {"$ref": "#/$defs/sha256"},
+        "execution_profile_schema": {"type": "string", "const": "coverfish.pointer-parallel-execution-profile.v1"},
+        "parallel_scheduler": {"$ref": "#/$defs/parallelScheduler"},
+        "user_agent": {"type": "string", "minLength": 1},
+        "bytes_retained": {"type": "boolean", "const": false},
+        "gpu_used": {"type": "boolean", "const": false}
+      }
+    },
+    "parallelExecutionProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "runner_version",
+        "runner_sha256",
+        "producer_version",
+        "producer_sha256",
+        "process_start_method",
+        "max_inflight_cap",
+        "default_max_inflight",
+        "request_spacing_basis",
+        "rate_state_schema",
+        "rate_state_update",
+        "robots_coordination",
+        "worker_receipt_model",
+        "canonical_writer",
+        "worker_reuse_gate",
+        "physical_commit_order",
+        "logical_identity_order",
+        "spool_recovery",
+        "spool_tail_recovery",
+        "nested_atomic_temp_recovery",
+        "recovery_ledger_tail_recovery",
+        "recovery_ledger_initial_temp",
+        "worker_quiescence",
+        "worker_fence",
+        "worker_quiescence_timeout_seconds",
+        "worker_network_gate",
+        "scheduler",
+        "bytes_retained",
+        "gpu_used"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-parallel-execution-profile.v1"},
+        "runner_version": {"type": "string", "const": "0.3.0"},
+        "runner_sha256": {"$ref": "#/$defs/sha256"},
+        "producer_version": {"type": "string", "const": "0.2.0"},
+        "producer_sha256": {"type": "string", "const": "14a0b11025256f22a79883d7337687cfd7b02af8646fb38e6351209cc7bca522"},
+        "process_start_method": {"type": "string", "const": "spawn"},
+        "max_inflight_cap": {"type": "integer", "const": 5},
+        "default_max_inflight": {"type": "integer", "const": 5},
+        "request_spacing_basis": {"type": "string", "const": "shared_rate_group_request_start"},
+        "rate_state_schema": {"type": "string", "const": "coverfish.pointer-rate-state.v3"},
+        "rate_state_update": {"type": "string", "const": "flock_reload_modify_atomic_write"},
+        "robots_coordination": {"type": "string", "const": "per_invocation_flock_singleflight"},
+        "worker_receipt_model": {"type": "string", "const": "private_fsynced_spool"},
+        "canonical_writer": {"type": "string", "const": "coordinator_only"},
+        "worker_reuse_gate": {"type": "string", "const": "canonical_fsync_ack"},
+        "physical_commit_order": {"type": "string", "const": "worker_completion_event_order"},
+        "logical_identity_order": {"type": "string", "const": "frozen_record_attempt_index"},
+        "spool_recovery": {"type": "string", "const": "mandatory_canonicalize_or_disposition_before_resume"},
+        "spool_tail_recovery": {"type": "string", "const": "hash_bound_truncate_then_disposition"},
+        "nested_atomic_temp_recovery": {"type": "string", "const": "hash_bound_promote_or_quarantine"},
+        "recovery_ledger_tail_recovery": {"type": "string", "const": "immutable_json_then_truncate"},
+        "recovery_ledger_initial_temp": {"type": "string", "const": "pre_network_promote_or_discard_prefix"},
+        "worker_quiescence": {"type": "string", "const": "stable_flock_shared_worker_exclusive_recovery"},
+        "worker_fence": {"type": "string", "const": "immutable_epoch_plus_durable_fence_before_spool_read"},
+        "worker_quiescence_timeout_seconds": {"type": "integer", "const": 900},
+        "worker_network_gate": {"type": "string", "const": "shared_lease_epoch_and_absent_fence_before_client"},
+        "scheduler": {"$ref": "#/$defs/parallelScheduler"},
+        "bytes_retained": {"type": "boolean", "const": false},
+        "gpu_used": {"type": "boolean", "const": false}
+      }
+    },
+    "parallelExecutionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "status",
+        "window_id",
+        "invocation_id",
+        "runner_version",
+        "runner_sha256",
+        "execution_profile_sha256",
+        "audit_contract_sha256",
+        "run_metadata_sha256",
+        "rows_selected",
+        "rows_committed",
+        "attempt_rows_canonicalized",
+        "attempt_rows_abandoned",
+        "robots_rows_canonicalized",
+        "spool_recovery_rows",
+        "max_inflight",
+        "worker_epoch",
+        "scheduler",
+        "eligible_rows_before_limit",
+        "full_schedule_sha256",
+        "selected_schedule_sha256",
+        "attempt_segment_sha256",
+        "completion_segment_sha256",
+        "disposition_segment_sha256",
+        "robots_segment_sha256",
+        "spool_recovery_segment_sha256",
+        "spool_reconciliation_complete",
+        "bytes_retained",
+        "gpu_used"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-parallel-execution-summary.v1"},
+        "status": {"type": "string", "enum": ["COMPLETE", "ERROR", "INTERRUPTED", "ABANDONED_BY_RESUME"]},
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "runner_version": {"type": "string", "const": "0.3.0"},
+        "runner_sha256": {"$ref": "#/$defs/sha256"},
+        "execution_profile_sha256": {"$ref": "#/$defs/sha256"},
+        "audit_contract_sha256": {"$ref": "#/$defs/sha256"},
+        "run_metadata_sha256": {"$ref": "#/$defs/sha256"},
+        "rows_selected": {"type": "integer", "minimum": 0},
+        "rows_committed": {"type": "integer", "minimum": 0},
+        "attempt_rows_canonicalized": {"type": "integer", "minimum": 0},
+        "attempt_rows_abandoned": {"type": "integer", "minimum": 0},
+        "robots_rows_canonicalized": {"type": "integer", "minimum": 0},
+        "spool_recovery_rows": {"type": "integer", "minimum": 0},
+        "max_inflight": {"type": "integer", "minimum": 1, "maximum": 5},
+        "worker_epoch": {"$ref": "#/$defs/sha256"},
+        "scheduler": {"$ref": "#/$defs/parallelScheduler"},
+        "eligible_rows_before_limit": {"type": "integer", "minimum": 0},
+        "full_schedule_sha256": {"$ref": "#/$defs/sha256"},
+        "selected_schedule_sha256": {"$ref": "#/$defs/sha256"},
+        "attempt_segment_sha256": {"$ref": "#/$defs/sha256"},
+        "completion_segment_sha256": {"$ref": "#/$defs/sha256"},
+        "disposition_segment_sha256": {"$ref": "#/$defs/sha256"},
+        "robots_segment_sha256": {"$ref": "#/$defs/sha256"},
+        "spool_recovery_segment_sha256": {"$ref": "#/$defs/sha256"},
+        "spool_reconciliation_complete": {"type": "boolean", "const": true},
+        "bytes_retained": {"type": "boolean", "const": false},
+        "gpu_used": {"type": "boolean", "const": false},
+        "error_code": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"enum": ["ERROR", "INTERRUPTED"]}}},
+          "then": {"required": ["error_code"]}
+        }
+      ]
+    },
+    "runMetadata": {
+      "type": "object",
+      "required": [
+        "schema",
+        "status",
+        "invocation_id",
+        "tool_version",
+        "tool_sha256",
+        "phash_algorithm",
+        "dependencies",
+        "runtime",
+        "window_id",
+        "scope",
+        "started_at_utc",
+        "completed_at_utc",
+        "rows_selected",
+        "rows_processed",
+        "attempts_before",
+        "attempts_after",
+        "attempts_written",
+        "completions_before",
+        "completions_after",
+        "retry_mode",
+        "max_rows",
+        "components",
+        "final_window",
+        "policy_sha256",
+        "bindings_sha256",
+        "manifest_sha256",
+        "contract_sha256",
+        "user_agent",
+        "bytes_retained",
+        "gpu_used"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-audit-run.v1"},
+        "status": {"type": "string", "enum": ["RUNNING", "COMPLETE", "ERROR", "INTERRUPTED", "ABANDONED_BY_RESUME"]},
+        "invocation_id": {"$ref": "#/$defs/invocationId"},
+        "tool_version": {"type": "string"},
+        "tool_sha256": {"$ref": "#/$defs/sha256"},
+        "phash_algorithm": {"type": "string"},
+        "dependencies": {"$ref": "#/$defs/dependencyReport"},
+        "runtime": {"$ref": "#/$defs/runtimeReport"},
+        "window_id": {"$ref": "#/$defs/windowId"},
+        "scope": {"type": "string", "enum": ["pilot", "archive"]},
+        "started_at_utc": {"$ref": "#/$defs/utcTimestamp"},
+        "completed_at_utc": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "rows_selected": {"type": "integer", "minimum": 0},
+        "rows_processed": {"type": "integer", "minimum": 0},
+        "attempts_before": {"type": "integer", "minimum": 0},
+        "attempts_after": {"type": ["integer", "null"], "minimum": 0},
+        "attempts_written": {"type": ["integer", "null"], "minimum": 0},
+        "completions_before": {"type": "integer", "minimum": 0},
+        "completions_after": {"type": ["integer", "null"], "minimum": 0},
+        "retry_mode": {"type": "string", "enum": ["none", "transient", "nonexact", "all"]},
+        "max_rows": {"type": ["integer", "null"], "minimum": 0},
+        "components": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/component"}},
+        "final_window": {"type": "boolean"},
+        "policy_sha256": {"$ref": "#/$defs/sha256"},
+        "bindings_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+        "contract_sha256": {"$ref": "#/$defs/sha256"},
+        "user_agent": {"type": "string", "minLength": 1},
+        "bytes_retained": {"type": "boolean", "const": false},
+        "gpu_used": {"type": "boolean", "const": false},
+        "parallel_max_inflight": {"type": "integer", "minimum": 1, "maximum": 5, "description": "Required by the contract-v2 wrapper; absent from frozen serial v0.2 metadata."},
+        "parallel_worker_epoch": {"allOf": [{"$ref": "#/$defs/sha256"}], "description": "Portable contract/invocation/window/start binding required by the contract-v2 wrapper; absent from frozen serial v0.2 metadata."},
+        "parallel_scheduler": {"$ref": "#/$defs/parallelScheduler"},
+        "parallel_eligible_rows_before_limit": {"type": "integer", "minimum": 0},
+        "parallel_full_schedule_sha256": {"$ref": "#/$defs/sha256"},
+        "parallel_selected_schedule_sha256": {"$ref": "#/$defs/sha256"},
+        "error_code": {"type": "string"},
+        "abandoned_attempts_recorded": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "countMap": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "nestedCountMap": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/countMap"}
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "status",
+        "audit_integrity",
+        "tool_version",
+        "tool_sha256",
+        "phash_algorithm",
+        "dependencies",
+        "runtime",
+        "scope",
+        "final_window",
+        "dataset",
+        "rows",
+        "outcomes",
+        "active_outcomes",
+        "by_component",
+        "by_source_host",
+        "by_resolved_via",
+        "by_resolution_protocol_status",
+        "by_final_host",
+        "by_http_status",
+        "attempt_aggregations",
+        "robots_aggregations",
+        "run_retry_modes",
+        "host_rate_policy",
+        "transient_backoff",
+        "attempts",
+        "attempt_bytes",
+        "committed_attempts",
+        "committed_attempt_bytes",
+        "receipt",
+        "observation",
+        "finality",
+        "resolution_protocol",
+        "exact",
+        "r0",
+        "active_staging",
+        "e0",
+        "pending",
+        "possible_placeholder_cluster_rows",
+        "bytes_retained",
+        "frozen_tier_mutated"
+      ],
+      "properties": {
+        "schema": {"type": "string", "const": "coverfish.pointer-health-summary.v2"},
+        "status": {"type": "string", "enum": ["PASS", "PENDING", "FAIL"]},
+        "audit_integrity": {"type": "string", "enum": ["PASS", "PENDING"]},
+        "tool_version": {"type": "string"},
+        "tool_sha256": {"$ref": "#/$defs/sha256"},
+        "phash_algorithm": {"type": "string"},
+        "dependencies": {"$ref": "#/$defs/dependencyReport"},
+        "runtime": {"$ref": "#/$defs/runtimeReport"},
+        "scope": {"type": "string", "enum": ["pilot", "archive"]},
+        "final_window": {"type": "boolean"},
+        "dataset": {"$ref": "#/$defs/datasetBinding"},
+        "rows": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scope", "archive_expected", "active_in_scope", "retired_in_scope"],
+          "properties": {
+            "scope": {"type": "integer", "minimum": 0},
+            "archive_expected": {"type": "integer", "const": 42387},
+            "active_in_scope": {"type": "integer", "minimum": 0},
+            "retired_in_scope": {"type": "integer", "minimum": 0}
+          }
+        },
+        "outcomes": {"$ref": "#/$defs/countMap"},
+        "active_outcomes": {"$ref": "#/$defs/countMap"},
+        "by_component": {"$ref": "#/$defs/nestedCountMap"},
+        "by_source_host": {"$ref": "#/$defs/nestedCountMap"},
+        "by_resolved_via": {"$ref": "#/$defs/countMap"},
+        "by_resolution_protocol_status": {"$ref": "#/$defs/countMap"},
+        "by_final_host": {"$ref": "#/$defs/countMap"},
+        "by_http_status": {"$ref": "#/$defs/countMap"},
+        "attempt_aggregations": {"$ref": "#/$defs/attemptAggregations"},
+        "robots_aggregations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rows", "by_fetch_status", "by_robots_state", "safety_review_rows"],
+          "properties": {
+            "rows": {"type": "integer", "minimum": 0},
+            "by_fetch_status": {"$ref": "#/$defs/countMap"},
+            "by_robots_state": {"$ref": "#/$defs/countMap"},
+            "safety_review_rows": {"type": "integer", "minimum": 0}
+          }
+        },
+        "run_retry_modes": {"$ref": "#/$defs/countMap"},
+        "host_rate_policy": {"$ref": "#/$defs/hostRatePolicy"},
+        "transient_backoff": {"$ref": "#/$defs/transientBackoff"},
+        "attempts": {"type": "integer", "minimum": 0},
+        "attempt_bytes": {"type": "integer", "minimum": 0},
+        "committed_attempts": {"type": "integer", "minimum": 0},
+        "committed_attempt_bytes": {"type": "integer", "minimum": 0},
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "completion_rows",
+            "abandoned_attempt_rows",
+            "tail_recovery_rows",
+            "atomic_temp_recovery_rows",
+            "completed_scope_rows",
+            "uncompleted_scope_rows",
+            "uncommitted_attempt_rows",
+            "bindings_sha256",
+            "manifest_sha256",
+            "policy_sha256",
+            "contract_sha256"
+          ],
+          "properties": {
+            "completion_rows": {"type": "integer", "minimum": 0},
+            "abandoned_attempt_rows": {"type": "integer", "minimum": 0},
+            "tail_recovery_rows": {"type": "integer", "minimum": 0},
+            "atomic_temp_recovery_rows": {"type": "integer", "minimum": 0},
+            "completed_scope_rows": {"type": "integer", "minimum": 0},
+            "uncompleted_scope_rows": {"type": "integer", "minimum": 0},
+            "uncommitted_attempt_rows": {"type": "integer", "minimum": 0},
+            "bindings_sha256": {"$ref": "#/$defs/sha256"},
+            "manifest_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+            "policy_sha256": {"$ref": "#/$defs/sha256"},
+            "contract_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "observation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["first_checked_at_utc", "last_checked_at_utc", "window_ids"],
+          "properties": {
+            "first_checked_at_utc": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+            "last_checked_at_utc": {"type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+            "window_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/windowId"}}
+          }
+        },
+        "finality": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "declared_final_window",
+            "declared_final_window_ids",
+            "minimum_distinct_windows",
+            "minimum_distinct_utc_dates",
+            "minimum_elapsed_hours",
+            "retryable_rows",
+            "nonexact_rows_requiring_retry_protocol",
+            "rows_observed_in_declared_final_window",
+            "rows_whose_latest_observation_is_declared_final",
+            "rows_satisfying_retry_protocol",
+            "rows_pending_retry_protocol"
+          ],
+          "properties": {
+            "declared_final_window": {"type": "boolean"},
+            "declared_final_window_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/windowId"}},
+            "minimum_distinct_windows": {"type": "integer", "const": 3},
+            "minimum_distinct_utc_dates": {"type": "integer", "const": 3},
+            "minimum_elapsed_hours": {"type": "integer", "const": 48},
+            "retryable_rows": {"type": "integer", "minimum": 0},
+            "nonexact_rows_requiring_retry_protocol": {"type": "integer", "minimum": 0},
+            "rows_observed_in_declared_final_window": {"type": "integer", "minimum": 0},
+            "rows_whose_latest_observation_is_declared_final": {"type": "integer", "minimum": 0},
+            "rows_satisfying_retry_protocol": {"type": "integer", "minimum": 0},
+            "rows_pending_retry_protocol": {"type": "integer", "minimum": 0}
+          }
+        },
+        "resolution_protocol": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["complete_rows", "incomplete_rows", "status_counts"],
+          "properties": {
+            "complete_rows": {"type": "integer", "minimum": 0},
+            "incomplete_rows": {"type": "integer", "minimum": 0},
+            "status_counts": {"$ref": "#/$defs/countMap"}
+          }
+        },
+        "exact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scope_rows",
+            "active_scope_rows",
+            "archive_rows",
+            "active_rows",
+            "scope_rate",
+            "active_scope_rate",
+            "archive_rate",
+            "active_rate",
+            "completed_rows",
+            "completed_rate",
+            "completed_active_rows",
+            "completed_active_rate"
+          ],
+          "properties": {
+            "scope_rows": {"type": "integer", "minimum": 0},
+            "active_scope_rows": {"type": "integer", "minimum": 0},
+            "archive_rows": {"type": ["integer", "null"], "minimum": 0},
+            "active_rows": {"type": ["integer", "null"], "minimum": 0},
+            "scope_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "active_scope_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "archive_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "active_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "completed_rows": {"type": "integer", "minimum": 0},
+            "completed_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "completed_active_rows": {"type": "integer", "minimum": 0},
+            "completed_active_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+          }
+        },
+        "r0": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "frozen_byte_complete_rows",
+            "pointer_rows",
+            "pointer_rows_in_scope",
+            "pointer_byte_exact_rows_in_scope",
+            "pointer_visual_near_candidate_rows_in_scope",
+            "pointer_byte_exact_rows",
+            "pointer_visual_near_candidate_rows",
+            "strict_exact_byte_availability_rows",
+            "strict_exact_byte_availability_rate",
+            "population_complete"
+          ],
+          "properties": {
+            "frozen_byte_complete_rows": {"type": "integer", "const": 15052},
+            "pointer_rows": {"type": "integer", "const": 34088},
+            "pointer_rows_in_scope": {"type": "integer", "minimum": 0, "maximum": 34088},
+            "pointer_byte_exact_rows_in_scope": {"type": "integer", "minimum": 0},
+            "pointer_visual_near_candidate_rows_in_scope": {"type": "integer", "minimum": 0},
+            "pointer_byte_exact_rows": {"type": ["integer", "null"], "minimum": 0},
+            "pointer_visual_near_candidate_rows": {"type": ["integer", "null"], "minimum": 0},
+            "strict_exact_byte_availability_rows": {"type": ["integer", "null"], "minimum": 15052},
+            "strict_exact_byte_availability_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "population_complete": {"type": "boolean"}
+          }
+        },
+        "active_staging": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "frozen_byte_complete_rows",
+            "pointer_rows",
+            "pointer_rows_in_scope",
+            "pointer_byte_exact_rows_in_scope",
+            "pointer_byte_exact_rows",
+            "strict_exact_byte_availability_rows",
+            "strict_exact_byte_availability_rate",
+            "population_complete"
+          ],
+          "properties": {
+            "frozen_byte_complete_rows": {"type": "integer", "const": 73835},
+            "pointer_rows": {"type": "integer", "const": 41945},
+            "pointer_rows_in_scope": {"type": "integer", "minimum": 0, "maximum": 41945},
+            "pointer_byte_exact_rows_in_scope": {"type": "integer", "minimum": 0},
+            "pointer_byte_exact_rows": {"type": ["integer", "null"], "minimum": 0},
+            "strict_exact_byte_availability_rows": {"type": ["integer", "null"], "minimum": 73835},
+            "strict_exact_byte_availability_rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "population_complete": {"type": "boolean"}
+          }
+        },
+        "e0": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["byte_complete_rows", "pointer_rows"],
+          "properties": {
+            "byte_complete_rows": {"type": "integer", "const": 6719},
+            "pointer_rows": {"type": "integer", "const": 0}
+          }
+        },
+        "pending": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["not_audited_rows", "uncompleted_scope_rows", "policy_rows", "local_deferral_rows", "resolution_protocol_rows", "safety_review_rows", "safety_review_record_rows", "safety_review_robots_rows", "retryable_rows"],
+          "properties": {
+            "not_audited_rows": {"type": "integer", "minimum": 0},
+            "uncompleted_scope_rows": {"type": "integer", "minimum": 0},
+            "policy_rows": {"type": "integer", "minimum": 0},
+            "local_deferral_rows": {"type": "integer", "minimum": 0},
+            "resolution_protocol_rows": {"type": "integer", "minimum": 0},
+            "safety_review_rows": {"type": "integer", "minimum": 0},
+            "safety_review_record_rows": {"type": "integer", "minimum": 0},
+            "safety_review_robots_rows": {"type": "integer", "minimum": 0},
+            "retryable_rows": {"type": "integer", "minimum": 0}
+          }
+        },
+        "possible_placeholder_cluster_rows": {"type": "integer", "minimum": 0},
+        "bytes_retained": {"type": "boolean", "const": false},
+        "frozen_tier_mutated": {"type": "boolean", "const": false}
+      }
+    }
+  }
+}

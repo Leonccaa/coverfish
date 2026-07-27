@@ -2,9 +2,12 @@ __pycache__/
 *.py[cod]
 .mypy_cache/
 .ruff_cache/
+.pytest_cache/
 .venv/
 
 # Default local outputs; data and model weights belong outside Git history.
 /artifacts/
 /coverfish-model/
 /coverfish-release/
+/pointer-audit-work/
+/pointer-receipts/

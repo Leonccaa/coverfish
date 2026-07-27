@@ -11,6 +11,12 @@ the Hugging Face dataset repository
 - immutable tag: `rev023-rc2-20260714`
 - fixed revision: `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`
 
+The complete dated pointer-audit receipts are published separately in the same
+repository under immutable tag
+[`pointer-audit-v04-20260726`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/pointer-audit-v04-20260726/supplements/pointer-audit-v04-20260726),
+revision `70284660ee40128ff1d34ccec12e5c3e78f83f25`. This supplement did not
+rewrite the base tag and did not mint a new DOI.
+
 ## Release-core accounting
 
 The archive release core contains 117,640 records:
@@ -37,15 +43,22 @@ successful release-time fetch and exact-hash match; no pointer currently meets t
 definition. `Pointer-fragile` retains metadata and an upstream locator without that
 reconstruction receipt.
 
+The [dated pointer audit](POINTER_AUDIT.md) records a later observation layer.
+Its published receipt observes 41,917/42,387 archive pointers and
+41,476/41,945 active pointers as byte-exact. These dated results do not
+retroactively change the frozen RC2 tier counts above. A direct-only second
+observation found the same 18 URLs unavailable with HTTP 404. A future package
+version would require its own explicitly bound classification.
+
 ANGFA contributes 451 pointer-only rows and no redistributed ANGFA image payload.
 Pointers must not be described as hosted pixels.
 
 ## Repository roles
 
 Hugging Face carries the image/query packs, frozen arrays and indices, manifests,
-checksums, and package verifiers. GitHub carries lightweight documentation,
-scientific and benchmark scope, rights information, citation metadata, and public
-verification code.
+checksums, package verifiers, and full dated pointer receipts. GitHub carries
+lightweight documentation, scientific and benchmark scope, rights information,
+citation metadata, and public verification code.
 
 GitHub Git and GitHub Releases do not mirror the large data archives. Row-level
 source, attribution, URL, licence, and rights fields remain authoritative for

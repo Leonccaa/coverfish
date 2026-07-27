@@ -1,0 +1,41 @@
+{
+  "schema": "coverfish.pointer-audit-public-surface.v1",
+  "version": "0.4",
+  "dataset": {
+    "doi": "10.57967/hf/9706",
+    "repository": "COVER-Fish/COVER-Fish",
+    "revision": "0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8",
+    "tag": "rev023-rc2-20260714"
+  },
+  "totals": {
+    "files": 25,
+    "bytes": 709901
+  },
+  "files": [
+    {"path": "config/host-policy-fishbase-2s-v2.json", "bytes": 2642, "sha256": "2987dffde63b8a0fa1e4a795142267d964d6644bd23d22c35b76b337112687a9", "role": "request-policy"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/EXPECTED-RESULT.json", "bytes": 472, "sha256": "72603e7a20c72dae551b7042ee44d35f9fadeb108de6488cc2ae3ffc5aafa622", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/FILES.tsv", "bytes": 1074, "sha256": "c70e7ae84e1b5687d82d6cb976d597bd6545c6324a2a489413625105f336ebbd", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/README.md", "bytes": 853, "sha256": "a3a5b64d4adaead914a68f1d5412e14a04ec82b54cc5192474574f56440e24b2", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/SHA256SUMS", "bytes": 1020, "sha256": "41b84bf2978d524c732d7ba76aff7ef68ef92b657e73a9ea5e3bf455072c8390", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/pair-expected.json", "bytes": 456, "sha256": "52390ef15e9d259c31fec376878d6c8f49d53e0bd03d35fba37f3ae4a8762359", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-0/audit-contract.json", "bytes": 199, "sha256": "b20d7f919145f540f09d39296c56b12d50e6daf122c73496fae119b099b98be0", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-0/pointer-health-attempts.tsv", "bytes": 857, "sha256": "62c0206c2d9e006bdff51480bd6ba760e030e0e9917a9ed56a4f4d618234d03a", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-0/pointer-health.tsv", "bytes": 1393, "sha256": "bd3dc14128312097191c73ebb81a1eb60fb2347dc507d9e2675ea5f8da0106f3", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-0/record-completions.tsv", "bytes": 369, "sha256": "d1f2624ad355015b46be47e9e91a427a226fd7932a72ce76279eef90bd737761", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-1/audit-contract.json", "bytes": 199, "sha256": "69eb731ceae087027ed4751fe3c126097413685ea2f02a8efc60cf01bb5ef7ca", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-1/pointer-health-attempts.tsv", "bytes": 1195, "sha256": "fb23525ec7d4ac786088f78660a1bfbb45c191f50ab15e8f6ddabde51d031030", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-1/pointer-health.tsv", "bytes": 1435, "sha256": "98631f8f8de1a73031ac74ae1f8fd877a8e409bf917f1c8469bf24efecc33e35", "role": "synthetic-fixture"},
+    {"path": "fixtures/minimal-pointer-receipt-v04/shard-1/record-completions.tsv", "bytes": 374, "sha256": "4dbcbdde53815ec60d8bf5d0925fe42b5ca50b8882e4f54cff3669f246bf910b", "role": "synthetic-fixture"},
+    {"path": "inputs/input-bindings.json", "bytes": 2357, "sha256": "917bd5603b33aadb5e1b23522592109cbafc2108ba6eaa67b18e4574148a00d7", "role": "immutable-input-binding"},
+    {"path": "requirements-pointer-audit-parallel-v04.txt", "bytes": 77, "sha256": "b813c6b1e86fbcbb3b55ba05e9662adb44c6488e18343adc2ce40c784b53e60c", "role": "dependency-lock"},
+    {"path": "requirements-pointer-audit.txt", "bytes": 59, "sha256": "38582028a376dad0914650f12dd5ebd58c2614e544badf94b7762e6a94d70009", "role": "dependency-lock"},
+    {"path": "schema/SCHEMA.md", "bytes": 22955, "sha256": "97a78906046490cfe0ccd2ef57e9b0acca630acaa306dca4817a9324beba0c11", "role": "schema-catalog"},
+    {"path": "schema/pointer-audit-schema.json", "bytes": 74561, "sha256": "93c8e05d2deec5d4b5a0f4e7785a5fce6f044c8359d1fb22ef061cd4ad47540d", "role": "machine-schema"},
+    {"path": "software/reconstruct_pointers.py", "bytes": 188612, "sha256": "14a0b11025256f22a79883d7337687cfd7b02af8646fb38e6351209cc7bca522", "role": "scientific-producer"},
+    {"path": "software/reconstruct_pointers_parallel_v04.py", "bytes": 147554, "sha256": "e957c795a34d17755e8954439ee3ec2e9ba3c459534dedb41189b1ec3912635f", "role": "fixed-shard-runner"},
+    {"path": "software/verify_pointer_audit_minimal_fixture_v04.py", "bytes": 21651, "sha256": "772001a22a232494cb9bef2a62aa00515f408f75644a9b79a6c99fa5b847e4ad", "role": "synthetic-fixture-verifier"},
+    {"path": "software/verify_pointer_receipt.py", "bytes": 130992, "sha256": "714f4eab6513e112095bf3c93121349284b30dba7429c163abd63e29e898527d", "role": "independent-base-verifier"},
+    {"path": "software/verify_pointer_receipt_pair_v04.py", "bytes": 47186, "sha256": "a9241eaa502f78fd1a29a0921ca2b8f20250813c5e7ec22c16662f98efc00374", "role": "two-shard-verifier"},
+    {"path": "software/verify_pointer_receipt_parallel_v04.py", "bytes": 61359, "sha256": "164aabe179e111df9a361d45e47d79f39bb1bc349164ca17de8f5acc7ff9d4d5", "role": "single-receipt-wrapper"}
+  ]
+}
