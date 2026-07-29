@@ -2,7 +2,7 @@
 
 ## Paper-aligned question
 
-The companion study asks whether a frozen biological image encoder can improve fish
+The companion study asks whether a frozen vision foundation model can adapt fish
 recognition through governed reference-gallery updates without retraining, and
 whether the same update can reverse sign under a different source, aggregation
 rule, or query domain.
@@ -96,30 +96,47 @@ that every added image helps or identify an optimal image count.
 
 ## Fishial comparison boundary
 
-The fixed comparison contains 1,931 queries from 665 species and retains each
-system's native end-to-end preprocessing. Fishial scores 67.63% top-1 and COVER-Fish
-R4 scores 56.34%; the R4-minus-Fishial difference is -11.29 points, 95% CI -14.82
-to -7.83. COVER-Fish is higher at top-5 by +3.73 points and at top-20 by +8.39
-points.
+Fishial v0.10.2's 866 raw classes resolve to 775 distinct scientific names. The
+only system-to-system comparison fixes that candidate universe and contains 1,931
+queries from 665 target species. Fishial and COVER-Fish retain their native
+end-to-end preprocessing.
 
-Only the nominal historical `51+` depth band has a top-1 interval excluding zero.
-That band contains 121 of the current 665 species and is descriptive, not a causal
-threshold. The comparison does not isolate encoder quality because Fishial uses its
+| Endpoint inside the shared 775-name universe | COVER-Fish R4 | Fishial | Paired difference, points |
+| --- | ---: | ---: | ---: |
+| Query-micro top-1 | 67.89% | 67.63% | +0.26, 95% CI -2.90 to +3.43 |
+| Species-macro top-1 | 65.20% | 65.47% | -0.27, 95% CI -3.75 to +3.16 |
+
+Neither interval resolves a winner, and neither is an equivalence test. In the
+historical depth bands, 0--20 references contribute -78 net correct answers across
+1,407 queries, while 21+ contributes +83 across 524. These bands describe effect
+modification; `51+` is a historical label rather than a causal threshold.
+
+Opening COVER-Fish to its actual 18,839-prototype R4 candidate field lowers its own
+query-micro top-1 on the same 1,931 queries to 56.34%. This is a COVER-Fish
+candidate-space sensitivity, not a system comparison: Fishial has no predictions
+outside its sealed vocabulary. Correspondingly, the other 4,788 QT26-QC queries
+have targets outside Fishial's vocabulary. COVER-Fish provides a target prototype
+for 4,696 of them and identifies 1,853 correctly at top-1; those values quantify
+expanded task support, not comparative accuracy.
+
+The bounded comparison does not isolate encoder quality because Fishial uses its
 official segment-bbox pipeline while COVER-Fish uses a BioCLIP full frame.
 
 ## Cross-domain failure and rollback
 
 The Commons step adds +7.49 query-micro and +5.98 species-macro top-1 points on
 QT26-QC, but the same frozen centroid transition reduces Fish-Vista museum-query
-top-1 by -2.16 micro and -3.52 macro points. Commons lacks the iNaturalist
+top-1 by -2.16 micro and -3.52 macro points. A frozen-embedding factorial assigns
+nearly all of the natural-photo change to updating existing prototypes (+5.95
+species-macro), while the same operation reproduces the complete -3.52-point
+museum-domain loss; label expansion contributes almost none of either transition.
+Commons lacks the iNaturalist
 image-time wall and has weaker species-identity assurance, so its natural-photo gain
 is a fixed-order scale/stress result, not a source-isolated causal estimate.
 
-A post-freeze Fish-Vista factorial finds that label expansion alone reproduces the
-pre-Commons outcomes, while updating existing mixed-source centroids reproduces the
-complete final loss. Source-separated and instance-level alternatives are
-diagnostics, not validated defaults. Under the frozen centroid pipeline, a failed
-specimen-domain gate means reject or roll back the Commons transition.
+Source-separated and instance-level alternatives are diagnostics, not validated
+defaults. Under the frozen centroid pipeline, a failed specimen-domain gate means
+reject or roll back the Commons transition.
 
 ## Evidence roles
 
@@ -141,4 +158,7 @@ specimen-domain gate means reject or roll back the Commons transition.
 - Commons photo suitability is not taxonomic verification.
 - Exact-ranking resource figures are not a complete deployment or concurrency
   benchmark.
-- The dataset is publicly accessible and DOI-bearing at `10.57967/hf/9706`.
+- The paper-aligned dataset snapshot is publicly accessible at commit
+  `8d17ddb7209870111719e871f4fc947576f8b8d1`; its current DOI is
+  finalized after the release card records the GitHub alignment commit. The earlier
+  base remains historical provenance at `10.57967/hf/9706`.

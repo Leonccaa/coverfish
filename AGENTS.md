@@ -18,6 +18,12 @@ frozen.
    reproduction.
 8. Keep the default CPU execution. Never request `--device cuda` without explicit
    operator approval for accelerator use.
+9. Treat `download_release.py` as a downloader for the historical immutable base;
+   it does not fetch the later analysis-evidence supplement.
+10. For REV035 claim evidence, download only
+    `supplements/analysis-evidence/*` at revision
+    `8d17ddb7209870111719e871f4fc947576f8b8d1`, then run
+    `python3 scripts/verify_analysis_evidence.py --root supplements/analysis-evidence`.
 
 ## Pointer-audit order of operations
 
@@ -46,9 +52,14 @@ frozen.
 
 ## Invariants
 
-- Dataset revision: `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`.
-- Dataset tag: `rev023-rc2-20260714`.
-- Dataset DOI: `10.57967/hf/9706`.
+- Current paper-aligned dataset snapshot:
+  `8d17ddb7209870111719e871f4fc947576f8b8d1`.
+- Current dataset DOI: resolve from the paper-aligned Hugging Face record after mint.
+- Analysis-evidence archive SHA-256:
+  `a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01`.
+- Historical base revision: `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`.
+- Historical base tag: `rev023-rc2-20260714`.
+- Historical base DOI: `10.57967/hf/9706`.
 - Pointer-audit supplement tag: `pointer-audit-v04-20260726`.
 - Pointer-audit supplement revision:
   `70284660ee40128ff1d34ccec12e5c3e78f83f25`.

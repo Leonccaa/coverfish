@@ -39,6 +39,7 @@ REQUIRED_FILES = (
     "schema/SCHEMA.md",
     "schema/pointer-audit-schema.json",
     "scripts/download_release.py",
+    "scripts/verify_analysis_evidence.py",
     "scripts/verify_bioclip_pipeline.py",
     "software/reconstruct_pointers.py",
     "software/reconstruct_pointers_parallel_v04.py",
@@ -47,6 +48,7 @@ REQUIRED_FILES = (
     "software/verify_pointer_receipt_pair_v04.py",
     "software/verify_pointer_audit_minimal_fixture_v04.py",
     "tests/test_download_release.py",
+    "tests/test_verify_analysis_evidence.py",
     "tests/test_verify_bioclip_pipeline.py",
     "tests/test_pointer_fixture.py",
     "tests/test_pointer_tools.py",
@@ -59,14 +61,24 @@ REQUIRED_README_TEXT = (
     "107,722",
     "19,144",
     "6,719",
-    "+1.35",
-    "+1.72",
-    "-3.52",
+    "1.35",
+    "1.72",
+    "67.89%",
+    "67.63%",
+    "65.20%",
+    "65.47%",
+    "56.34%",
+    "4,788",
+    "4,696",
+    "1,853",
+    "5.95",
+    "3.52",
     "117,640",
     "75,253",
     "42,387",
-    "115,780",
     "10.57967/hf/9706",
+    "8d17ddb7209870111719e871f4fc947576f8b8d1",
+    "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01",
     "Hugging Face",
     "0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8",
     "rev023-rc2-20260714",
@@ -74,10 +86,9 @@ REQUIRED_README_TEXT = (
     "Apache-2.0",
     "CC BY 4.0",
     "download_release.py",
+    "verify_analysis_evidence.py",
     "verify_bioclip_pipeline.py",
     "docs/POINTER_AUDIT.md",
-    "4--5 days",
-    "2--3 days",
 )
 
 STALE_OR_UNSUPPORTED_TEXT = (
@@ -99,6 +110,9 @@ STALE_OR_UNSUPPORTED_TEXT = (
     "DOI generation remains pending",
     "A DOI will be added",
     "Local review branch",
+    "biological image encoder",
+    "Fishial scores 67.63% top-1 and COVER-Fish R4 scores 56.34%",
+    "__CURRENT_",
 )
 
 PRIVATE_PATTERNS = (
@@ -467,6 +481,26 @@ def check_tool_contract(errors: list[str]) -> None:
     if args.device != "cpu":
         errors.append("BioCLIP verifier no longer defaults to CPU")
 
+    analysis = runpy.run_path(str(ROOT / "scripts/verify_analysis_evidence.py"))
+    if analysis["TOOL_VERSION"] != "1.0.0":
+        errors.append("analysis-evidence verifier version changed")
+    if analysis["EXPECTED_ALIGNMENT"] != "REV035":
+        errors.append("analysis-evidence manuscript alignment changed")
+    if analysis["EXPECTED_MODULES"] != 13:
+        errors.append("analysis-evidence module count changed")
+    if analysis["EXPECTED_ARTIFACTS"] != 169:
+        errors.append("analysis-evidence artifact count changed")
+    if analysis["EXPECTED_CLAIMS"] != 14:
+        errors.append("analysis-evidence claim count changed")
+    if analysis["EXPECTED_ARCHIVE_SHA256"] != (
+        "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01"
+    ):
+        errors.append("analysis-evidence archive hash changed")
+    if analysis["EXPECTED_FILES_LEDGER_SHA256"] != (
+        "77ab909068dbbcd0b01ae268e877a18b30833a2f71e107693195502f9d276d00"
+    ):
+        errors.append("analysis-evidence file-ledger hash changed")
+
 
 def check_claims(errors: list[str]) -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -529,10 +563,11 @@ def check_claims(errors: list[str]) -> None:
 
     citation = (ROOT / "CITATION.md").read_text(encoding="utf-8")
     for token in (
-        "10.57967/hf/9706",
+        "10.57967/HF/9706",
         "COVER-Fish` (`Organizational`)",
         "Version 0ee47b2",
         "Hugging Face",
+        "8d17ddb7209870111719e871f4fc947576f8b8d1",
     ):
         if token not in citation:
             errors.append(f"CITATION.md: missing verified DOI token: {token!r}")
@@ -548,12 +583,15 @@ def check_claims(errors: list[str]) -> None:
         "107,722",
         "19,144",
         "451 pointer-only rows",
+        "169 artifacts across 13 modules",
+        "14-claim",
+        "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01",
     ):
         if token not in availability:
             errors.append(f"docs/DATA_AVAILABILITY.md: missing release token: {token!r}")
 
     if (ROOT / "CITATION.cff").exists():
-        errors.append("CITATION.cff is outside the approved REV024 alignment surface")
+        errors.append("CITATION.cff is outside the approved REV035 alignment surface")
 
 
 def main() -> int:
@@ -581,7 +619,7 @@ def main() -> int:
     print("PASS: frozen paper values and public dataset identifiers are present")
     print("PASS: enumerated stale or unsupported public wording is absent")
     print("PASS: Apache-2.0 and CC-BY-4.0 texts and mixed-rights scope are present")
-    print("PASS: downloader and BioCLIP verifier identities and manifest totals are fixed")
+    print("PASS: base downloader, analysis-evidence verifier, and BioCLIP verifier contracts are fixed")
     return 0
 
 

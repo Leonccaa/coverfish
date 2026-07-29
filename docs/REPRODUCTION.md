@@ -12,9 +12,33 @@ The check verifies required files, repository-relative links, frozen headline
 values, release identifiers, licence texts, and the absence of private paths or
 service identifiers. It does not download data or recompute paper estimates.
 
-## Pinned data downloader
+## REV035 analysis evidence
 
-Use the immutable Hugging Face tag `rev023-rc2-20260714` or fixed revision
+The paper-aligned evidence commit is
+`8d17ddb7209870111719e871f4fc947576f8b8d1`. Download only the compact analysis
+layer without pulling the 83 GB base archives:
+
+```bash
+hf download COVER-Fish/COVER-Fish \
+  --repo-type dataset \
+  --revision 8d17ddb7209870111719e871f4fc947576f8b8d1 \
+  --include "supplements/analysis-evidence/*" \
+  --local-dir coverfish-paper-release
+
+python3 scripts/verify_analysis_evidence.py \
+  --root coverfish-paper-release/supplements/analysis-evidence
+```
+
+The verifier uses only the Python standard library plus GNU tar with zstd support.
+It checks the four files in the supplement checksum ledger, rejects unsafe archive
+paths, verifies all 169 rows in `ARTIFACT-INVENTORY.tsv`, confirms all 14 claim
+paths in `CLAIM-ARTIFACT-LEDGER.tsv`, and checks the REV035 release metadata. It
+does not execute the deposited analysis programs or recompute scores.
+
+## Pinned historical-base downloader
+
+The large-object downloader intentionally remains bound to the byte-identical
+historical base. Use tag `rev023-rc2-20260714` or fixed revision
 `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`, rather than an unpinned moving branch.
 The package README, file map, `SHA256SUMS`, and offline verifiers define the expected
 inventory and integrity checks.
