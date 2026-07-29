@@ -3,12 +3,24 @@
 ## Current paper-aligned dataset
 
 DataCite records the dataset creator as `COVER-Fish` (`Organizational`). The
-recommended citation for the REV035-aligned release is inserted after the release
-card records this GitHub alignment commit and the final Hugging Face snapshot is
-assigned its DOI. This draft branch must not invent or anticipate that identifier.
+recommended citation for the REV035-aligned release is:
 
-The paper-aligned evidence commit is
-`8d17ddb7209870111719e871f4fc947576f8b8d1`. It preserves the earlier large
+> COVER-Fish. (2026). *COVER-Fish* (Version 4e437b6) [Dataset]. Hugging Face.
+> <https://doi.org/10.57967/HF/9776>
+
+```bibtex
+@misc{https://doi.org/10.57967/hf/9776,
+  doi = {10.57967/HF/9776},
+  url = {https://huggingface.co/datasets/COVER-Fish/COVER-Fish},
+  author = {{COVER-Fish}},
+  title = {COVER-Fish},
+  publisher = {Hugging Face},
+  year = {2026}
+}
+```
+
+The DOI snapshot is Hub commit
+`4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`. It preserves the earlier large
 archives byte-for-byte and adds the REV035 analysis-evidence layer.
 
 ## Historical base dataset
@@ -31,6 +43,6 @@ The companion manuscript is:
 
 Author identifier: [ORCID 0009-0004-0467-7032](https://orcid.org/0009-0004-0467-7032).
 
-The dataset and manuscript are distinct citation objects. Once minted, the current
-DOI identifies the paper-aligned dataset snapshot; this GitHub repository provides
-lightweight documentation and verification code.
+The dataset and manuscript are distinct citation objects. The current DOI identifies
+the paper-aligned dataset snapshot; this GitHub repository provides lightweight
+documentation and verification code.

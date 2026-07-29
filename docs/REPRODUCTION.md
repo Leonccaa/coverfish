@@ -14,14 +14,14 @@ service identifiers. It does not download data or recompute paper estimates.
 
 ## REV035 analysis evidence
 
-The paper-aligned evidence commit is
-`8d17ddb7209870111719e871f4fc947576f8b8d1`. Download only the compact analysis
+The DOI snapshot is
+`4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`. Download only the compact analysis
 layer without pulling the 83 GB base archives:
 
 ```bash
 hf download COVER-Fish/COVER-Fish \
   --repo-type dataset \
-  --revision 8d17ddb7209870111719e871f4fc947576f8b8d1 \
+  --revision 4e437b6a2bf5f9a12a200bbe3a93411fe713db1f \
   --include "supplements/analysis-evidence/*" \
   --local-dir coverfish-paper-release
 

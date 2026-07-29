@@ -77,7 +77,9 @@ REQUIRED_README_TEXT = (
     "75,253",
     "42,387",
     "10.57967/hf/9706",
-    "8d17ddb7209870111719e871f4fc947576f8b8d1",
+    "10.57967/hf/9776",
+    "4e437b6a2bf5f9a12a200bbe3a93411fe713db1f",
+    "Version 4e437b6",
     "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01",
     "Hugging Face",
     "0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8",
@@ -113,6 +115,9 @@ STALE_OR_UNSUPPORTED_TEXT = (
     "biological image encoder",
     "Fishial scores 67.63% top-1 and COVER-Fish R4 scores 56.34%",
     "__CURRENT_",
+    "8d17ddb7209870111719e871f4fc947576f8b8d1",
+    "assigned after the release card",
+    "after mint",
 )
 
 PRIVATE_PATTERNS = (
@@ -563,11 +568,13 @@ def check_claims(errors: list[str]) -> None:
 
     citation = (ROOT / "CITATION.md").read_text(encoding="utf-8")
     for token in (
+        "10.57967/HF/9776",
         "10.57967/HF/9706",
         "COVER-Fish` (`Organizational`)",
+        "Version 4e437b6",
         "Version 0ee47b2",
         "Hugging Face",
-        "8d17ddb7209870111719e871f4fc947576f8b8d1",
+        "4e437b6a2bf5f9a12a200bbe3a93411fe713db1f",
     ):
         if token not in citation:
             errors.append(f"CITATION.md: missing verified DOI token: {token!r}")
@@ -586,6 +593,9 @@ def check_claims(errors: list[str]) -> None:
         "169 artifacts across 13 modules",
         "14-claim",
         "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01",
+        "10.57967/hf/9776",
+        "4e437b6a2bf5f9a12a200bbe3a93411fe713db1f",
+        "DataCite version: `4e437b6`",
     ):
         if token not in availability:
             errors.append(f"docs/DATA_AVAILABILITY.md: missing release token: {token!r}")

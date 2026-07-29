@@ -9,6 +9,7 @@ then tests later source layers while holding the encoder, preprocessing,
 aggregation, queries, and scoring fixed.
 
 [Dataset](https://huggingface.co/datasets/COVER-Fish/COVER-Fish) ·
+[DOI](https://doi.org/10.57967/hf/9776) ·
 [Data availability](docs/DATA_AVAILABILITY.md) ·
 [Reproduction](docs/REPRODUCTION.md) ·
 [Citation](CITATION.md)
@@ -59,15 +60,15 @@ Fishial accuracy outside its scope.
 The current paper-aligned release is hosted at
 [`COVER-Fish/COVER-Fish`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish):
 
-- DOI: assigned only after this GitHub alignment commit is recorded in the release card;
-- paper-aligned evidence commit: `8d17ddb7209870111719e871f4fc947576f8b8d1`;
+- DOI: [`10.57967/hf/9776`](https://doi.org/10.57967/hf/9776);
+- DOI snapshot commit: `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`;
 - manuscript alignment: `REV035`;
 - clean active gallery: 107,722 rows / 19,144 species prototypes; and
 - archive surface: 117,640 records (75,253 byte-bearing; 42,387 pointer rows).
 
 The release preserves the earlier 83 GB archives byte-for-byte and adds compact
 REV035 analysis evidence under
-[`supplements/analysis-evidence/`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/8d17ddb7209870111719e871f4fc947576f8b8d1/supplements/analysis-evidence).
+[`supplements/analysis-evidence/`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/4e437b6a2bf5f9a12a200bbe3a93411fe713db1f/supplements/analysis-evidence).
 Its deterministic archive contains 169 artifacts across 13 analysis modules;
 `CLAIM-ARTIFACT-LEDGER.tsv` maps 14 manuscript claims to those files. The archive's
 SHA-256 is
@@ -150,9 +151,10 @@ documentation is CC BY 4.0. Third-party images, metadata, and database content
 remain governed by their file-specific or row-level rights information; byte
 completeness is an integrity class, not a blanket licence.
 
-The current DOI citation is inserted only after the paper-aligned Hugging Face
-snapshot is final. See [CITATION.md](CITATION.md) for the historical base citation
-and the release-state distinction.
+> COVER-Fish. (2026). *COVER-Fish* (Version 4e437b6) [Dataset]. Hugging Face.
+> <https://doi.org/10.57967/HF/9776>
+
+See [CITATION.md](CITATION.md) for BibTeX and the separate historical-base citation.
 
 Liang Li (ORCID [`0009-0004-0467-7032`](https://orcid.org/0009-0004-0467-7032))
 is the manuscript author and contact. Dataset and manuscript citations remain

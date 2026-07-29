@@ -4,9 +4,9 @@
 | --- | --- |
 | GitHub documentation/code alignment | REV035, `agent/rev035-release-alignment`, 2026-07-28 |
 | Companion manuscript | REV035 |
-| Current paper-aligned dataset snapshot | `8d17ddb7209870111719e871f4fc947576f8b8d1` |
-| Current dataset DOI | Assigned after the GitHub alignment commit is recorded in the release card |
-| Current DataCite version | Assigned with the current DOI |
+| Current paper-aligned dataset snapshot | `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f` |
+| Current dataset DOI | `10.57967/hf/9776` |
+| Current DataCite version | `4e437b6` |
 | Analysis-evidence archive SHA-256 | `a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01` |
 | Historical base DOI | `10.57967/hf/9706` |
 | Historical base tag | `rev023-rc2-20260714` |

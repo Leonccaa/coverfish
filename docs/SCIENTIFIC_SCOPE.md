@@ -159,6 +159,6 @@ reject or roll back the Commons transition.
 - Exact-ranking resource figures are not a complete deployment or concurrency
   benchmark.
 - The paper-aligned dataset snapshot is publicly accessible at commit
-  `8d17ddb7209870111719e871f4fc947576f8b8d1`; its current DOI is
-  finalized after the release card records the GitHub alignment commit. The earlier
-  base remains historical provenance at `10.57967/hf/9706`.
+  `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`, DOI
+  `10.57967/hf/9776`. The earlier base remains historical provenance at
+  `10.57967/hf/9706`.

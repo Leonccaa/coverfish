@@ -6,12 +6,13 @@ The COVER-Fish paper-data and reproducibility package is public in the Hugging F
 dataset repository
 [`COVER-Fish/COVER-Fish`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish).
 
-- current DOI: assigned after the release card records the GitHub alignment commit
-- paper-aligned evidence commit: `8d17ddb7209870111719e871f4fc947576f8b8d1`
+- current DOI: [`10.57967/hf/9776`](https://doi.org/10.57967/hf/9776)
+- DOI snapshot commit: `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`
+- DataCite version: `4e437b6`
 - manuscript alignment: `REV035`
 - dataset creator: `COVER-Fish` (`Organizational`)
 
-The final DOI snapshot retains every large object from the earlier base release
+The DOI snapshot retains every large object from the earlier base release
 byte-for-byte and adds the compact analysis evidence needed by REV035. The dataset
 card is mutable discovery metadata and is intentionally excluded from the root
 checksum seal; the DOI snapshot commit and root checksum ledgers identify the
@@ -20,7 +21,7 @@ immutable release surface.
 ## Analysis evidence
 
 The current diagnostic package is fixed at
-[`supplements/analysis-evidence/`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/8d17ddb7209870111719e871f4fc947576f8b8d1/supplements/analysis-evidence).
+[`supplements/analysis-evidence/`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/4e437b6a2bf5f9a12a200bbe3a93411fe713db1f/supplements/analysis-evidence).
 It contains:
 
 - `analysis-evidence.tar.zst`: 2,272,506 bytes, SHA-256

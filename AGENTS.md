@@ -22,7 +22,7 @@ frozen.
    it does not fetch the later analysis-evidence supplement.
 10. For REV035 claim evidence, download only
     `supplements/analysis-evidence/*` at revision
-    `8d17ddb7209870111719e871f4fc947576f8b8d1`, then run
+    `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`, then run
     `python3 scripts/verify_analysis_evidence.py --root supplements/analysis-evidence`.
 
 ## Pointer-audit order of operations
@@ -53,8 +53,8 @@ frozen.
 ## Invariants
 
 - Current paper-aligned dataset snapshot:
-  `8d17ddb7209870111719e871f4fc947576f8b8d1`.
-- Current dataset DOI: resolve from the paper-aligned Hugging Face record after mint.
+  `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`.
+- Current dataset DOI: `10.57967/hf/9776`.
 - Analysis-evidence archive SHA-256:
   `a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01`.
 - Historical base revision: `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`.
