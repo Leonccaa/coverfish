@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan, download, and verify the immutable COVER-Fish data release.
+"""Plan, download, and verify the historical immutable COVER-Fish base release.
 
 Operational commands emit exactly one JSON document on stdout. Progress is sent
 to stderr. The fixed manifest below is independent of the moving Hub default
@@ -324,7 +324,7 @@ def command_download(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = JsonArgumentParser(
-        description="Plan, download, or verify the immutable COVER-Fish release.",
+        description="Plan, download, or verify the immutable COVER-Fish base release.",
     )
     parser.add_argument("--version", action="version", version=TOOL_VERSION)
     subparsers = parser.add_subparsers(dest="command", required=True)

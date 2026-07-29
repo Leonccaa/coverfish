@@ -9,7 +9,7 @@ successive versions of one test set, and their numbers must not be pooled.
 | Q-INT / D0 | 1,044 = 946 positives + 98 distractors; 562 positive target taxa | Development-only encoder and aggregation selection; open-set diagnostic | Included in the public tagged Hub package |
 | QT26-QC / E0 | 6,719 queries / 3,121 taxa | Fixed primary current evaluation roster | Included in the public tagged Hub package |
 | Broad QT26 | 133,041 queries / 4,264 taxa | Query-frequency-imbalanced sensitivity analysis | Not the current public-package object |
-| Fishial matched subset | 1,931 queries / 665 species | Native-pipeline system comparison | Predictions are not distributed here |
+| Fishial candidate-restricted subset | 1,931 queries / 665 species; 775-name candidate universe | Native-pipeline system comparison | Predictions and compact evidence are in the analysis supplement |
 | FishNet | 18,901 fixed natural-photo queries | Third-party transfer benchmark | Upstream benchmark; not repackaged here |
 | Fish-Vista | 8,699 fixed museum queries / 1,517 labels | Third-party failure domain and post-freeze mechanism diagnostic | Upstream benchmark; not repackaged here |
 | WildFish | 20,394 fixed queries | Supplementary legacy-web stress test | Upstream lineage; not repackaged here |
@@ -48,8 +48,17 @@ quota rule as a causal explanation.
 Fishial is an offline specialist comparator. The paper fixes its v0.10.2 classifier
 bundle and official detector/segmenter preprocessing. COVER-Fish and Fishial retain
 their native pipelines, so the comparison is end-to-end rather than encoder-only.
-Fishial is stronger overall at top-1; COVER-Fish is stronger at top-5 and top-20 on
-the fixed matched subset.
+Fishial's 866 raw classes resolve to 775 normalized scientific names. The only
+system comparison reranks every COVER-Fish round inside that same 775-name candidate
+universe and scores 1,931 fixed queries from 665 species. At R4, query-micro top-1
+is 67.89% for COVER-Fish and 67.63% for Fishial; species-macro is 65.20% and
+65.47%, respectively. The paired intervals resolve no winner and do not establish
+equivalence.
+
+COVER-Fish's 56.34% score after restoring its native 18,839-prototype field is a
+candidate-space sensitivity on the same queries, not a Fishial comparison. Likewise,
+the 4,788 QT26-QC queries outside Fishial's vocabulary support only COVER-Fish
+coverage and accuracy reporting; Fishial has no defined prediction task there.
 
 ## External rosters
 

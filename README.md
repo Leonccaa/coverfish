@@ -1,115 +1,127 @@
 # COVER-Fish
 
-**Auditable Gallery-Only Adaptation and Its Cross-Domain Limits in Fish Recognition**
+**Auditable Reference-Gallery Updates and Cross-Domain Sign Reversal in Fish Recognition**
 
-COVER-Fish studies whether a frozen biological image encoder can improve fish
-species recognition through governed reference-gallery updates, without retraining,
-and where that strategy fails across source and query domains.
+COVER-Fish asks whether a frozen vision foundation model can adapt fish recognition
+through evidence updates rather than weight updates—and when the same operation can
+fail. The study reconstructs four staged iNaturalist reference-gallery updates,
+then tests later source layers while holding the encoder, preprocessing,
+aggregation, queries, and scoring fixed.
 
 [Dataset](https://huggingface.co/datasets/COVER-Fish/COVER-Fish) ·
-[DOI](https://doi.org/10.57967/hf/9706) ·
+[DOI](https://doi.org/10.57967/hf/9776) ·
 [Data availability](docs/DATA_AVAILABILITY.md) ·
 [Reproduction](docs/REPRODUCTION.md) ·
-[Pointer audit](docs/POINTER_AUDIT.md) ·
 [Citation](CITATION.md)
 
 ## Study at a glance
 
-The frozen system uses FishBase 25.04 as its taxonomy backbone, BioCLIP 2.5
-ViT-H/14 with its native full-frame processor, L2-normalised embeddings, one
+The experiment starts from 49,140 FishBase references. Its core intervention adds
+30,796 pre-cutoff iNaturalist Research Grade references over 615 deliberately
+selected taxa in four preserved rounds. The frozen recogniser uses BioCLIP 2.5
+ViT-H/14, its native full-frame processor, L2-normalised embeddings, one
 image-count-weighted centroid per species, and exact prototype ranking.
 
-| Frozen object or result | Paper-aligned value |
-| --- | ---: |
-| FishBase R0 breadth base | 49,140 references / 18,733 taxa |
-| iNat-RG Archive | 32,656 references / 618 taxa |
-| Active pre-cutoff iNat-RG-Pre | 30,796 references / 615 taxa |
-| R4 endpoint | 79,936 gallery rows |
-| Final clean source-layer view | 107,722 rows / 19,144 species centroids |
-| QT26-QC primary evaluation | 6,719 queries / 3,121 taxa |
-| R0 to R4 query-micro top-1 | +1.35 percentage points, 95% CI +0.30 to +2.43 |
-| R0 to R4 species-macro top-1 | +1.72 points, 95% CI +0.77 to +2.70 |
-| Commons step on Fish-Vista species-macro top-1 | -3.52 points, 95% CI -4.41 to -2.64 |
+The evidence sequence is deliberately bounded:
 
-The result is deliberately two-sided. Temporally separated iNaturalist gallery
-updates improve the fixed post-cutoff natural-photo roster. A later Wikimedia
-Commons layer improves natural-photo recognition but harms museum-specimen
-recognition under the same frozen single-centroid rule. The supported deployment
-boundary is therefore **source pack × aggregation rule × query domain**.
+1. **Refinement inside Fishial's scope.** Every R0--R4 view is reranked within
+   Fishial v0.10.2's 775 normalized scientific names. R1--R3 provide virtually all
+   in-scope reinforcement; R4 is flat at the restricted endpoint.
+2. **Candidate-competition stress.** Restoring COVER-Fish's actual candidate field
+   at R4 tests how added breadth displaces answers established in the bounded task.
+   Fishial is not compared outside its 775-name support.
+3. **Post-cutoff validation.** Across all 6,719 QT26-QC queries, R0--R4 improves
+   query-micro top-1 by 1.35 points (95% CI, 0.30 to 2.43) and species-macro by
+   1.72 points (0.77 to 2.70).
+4. **Cross-domain gate.** Updating existing mixed-source prototypes at the Commons
+   step raises species-macro by 5.95 points on natural photos but lowers it by 3.52
+   points on museum specimens under the same frozen centroid rule.
 
-## Public resources
+The supported deployment boundary is therefore **source layer × aggregation rule ×
+query domain**. Gallery updates are inspectable and reversible, but they are
+globally coupled interventions rather than risk-free additions.
 
-The complete paper-data and reproducibility package is hosted on Hugging Face:
+## Fishial comparison boundary
 
-- repository: [`COVER-Fish/COVER-Fish`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish);
-- DOI: [`10.57967/hf/9706`](https://doi.org/10.57967/hf/9706);
-- project version: `REV023-RC2-20260714`;
-- immutable tag: `rev023-rc2-20260714`; and
-- fixed Hub revision: `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`.
+The only system-to-system comparison uses 1,931 queries from 665 species and the
+same sealed 775-name candidate universe. At R4, COVER-Fish is 67.89% query-micro
+top-1 versus Fishial's 67.63%; species-macro is 65.20% versus 65.47%. The paired
+intervals resolve no winner and are not equivalence tests.
 
-The archive release core contains 117,640 records: 75,253 byte-bearing rows and
-42,387 pointer rows. The active projection contains 115,780 records. ANGFA remains
-a 451-row pointer-only source; pointer records are not redistributed image pixels.
+Opening COVER-Fish to its native 18,839-prototype candidate field lowers its own
+score on those queries to 56.34%; that value is a candidate-space sensitivity, not
+a comparison with Fishial. Of the remaining 4,788 QT26-QC queries whose targets lie
+outside Fishial's vocabulary, COVER-Fish has target support for 4,696 and identifies
+1,853 correctly at top-1. These numbers establish expanded task support, not
+Fishial accuracy outside its scope.
 
-The published dated pointer-audit supplement observes 41,917/42,387 archive
-pointers as SHA-256 byte-exact (98.8912%). A direct-only second observation
-confirmed that the same 18 unavailable URLs again returned HTTP 404. The
-complete receipts are fixed by supplement tag
-[`pointer-audit-v04-20260726`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/pointer-audit-v04-20260726/supplements/pointer-audit-v04-20260726).
-This later observation does not rewrite the frozen release tiers; see [Pointer
-audit](docs/POINTER_AUDIT.md).
+## Public release
 
-This GitHub repository is the lightweight REV024 baseline for project
-documentation, scientific scope, citation, rights information, and verification
-code. Large image archives and tensor arrays are distributed through the DOI-bound
-dataset, not through GitHub.
+The current paper-aligned release is hosted at
+[`COVER-Fish/COVER-Fish`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish):
 
-## Safe automated use
+- DOI: [`10.57967/hf/9776`](https://doi.org/10.57967/hf/9776);
+- DOI snapshot commit: `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`;
+- manuscript alignment: `REV035`;
+- clean active gallery: 107,722 rows / 19,144 species prototypes; and
+- archive surface: 117,640 records (75,253 byte-bearing; 42,387 pointer rows).
 
-Inspect an exact download plan without network access or local writes:
+The release preserves the earlier 83 GB archives byte-for-byte and adds compact
+REV035 analysis evidence under
+[`supplements/analysis-evidence/`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/4e437b6a2bf5f9a12a200bbe3a93411fe713db1f/supplements/analysis-evidence).
+Its deterministic archive contains 169 artifacts across 13 analysis modules;
+`CLAIM-ARTIFACT-LEDGER.tsv` maps 14 manuscript claims to those files. The archive's
+SHA-256 is
+`a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01`.
+
+The earlier base release remains citable as historical provenance at DOI
+[`10.57967/hf/9706`](https://doi.org/10.57967/hf/9706), tag
+`rev023-rc2-20260714`, and commit
+`0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`. The dated pointer-audit supplement
+remains fixed at tag `pointer-audit-v04-20260726` and commit
+`70284660ee40128ff1d34ccec12e5c3e78f83f25`.
+
+## Reproduce and verify
+
+The base-release downloader remains pinned to the historical immutable base:
 
 ```bash
 python3 scripts/download_release.py plan --profile smoke
 ```
 
-Operational commands return one stable JSON document on stdout and send progress
-to stderr. The `smoke` profile contains control files, CORE, and D0 (903,269,834
-bytes). The complete 83,253,466,397-byte surface and every profile of 5 GB or more
-require the explicit `--accept-large-download` flag.
-
-After extracting CORE and D0, audit a byte-bound query and the pinned BioCLIP model
-requirements without downloading the model:
+To verify the compact paper-aligned analysis layer after downloading its six files:
 
 ```bash
-python3 scripts/verify_bioclip_pipeline.py plan \
-  --core-dir artifacts/core \
-  --d0-dir artifacts/d0
+python3 scripts/verify_analysis_evidence.py \
+  --root supplements/analysis-evidence
 ```
 
-See [Reproduction](docs/REPRODUCTION.md) for complete commands and [Agent operating
-contract](AGENTS.md) for machine-facing status and safety rules.
+The complete 83,253,466,397-byte base surface and every profile of 5 GB or more
+require the downloader's explicit `--accept-large-download` flag. See
+[Reproduction](docs/REPRODUCTION.md) for exact commands and the distinction between
+ranking replay, image re-encoding, and pointer reconstruction.
 
-The optional dated pointer audit takes approximately **4--5 days** as one
-complete run or **2--3 days** in fixed two-shard mode; transient responses and
-later retry windows can extend those estimates. See [Pointer
-audit](docs/POINTER_AUDIT.md).
+The dated pointer audit observes 41,917/42,387 archive pointers as SHA-256 exact;
+18 URLs returned HTTP 404/410, 451 ANGFA rows remain permission-policy pending, and
+one pHash diagnostic candidate is not counted as byte-exact. It does not rewrite
+the frozen release tiers. See [Pointer audit](docs/POINTER_AUDIT.md).
 
 ## Evidence boundaries
 
-- The 615 intervention taxa were deliberately selected; they are not a random or
+- The 615 intervention taxa were deliberately selected and are not a random or
   representative sample of FishBase.
-- Q-INT is the development benchmark used to select the encoder and aggregation.
-  QT26-QC is the fixed primary evaluation roster. Their roles are not pooled.
-- Fishial is an end-to-end native-pipeline comparator. COVER-Fish is lower overall
-  at top-1 on the fixed matched subset, but higher at top-5 and top-20.
+- Q-INT selects the frozen method; QT26-QC is the fixed primary evaluation roster.
+- Fishial comparison stops at the shared 775-name candidate set.
 - FishNet and Fish-Vista are third-party query benchmarks and never enter the
-  COVER-Fish reference gallery.
-- Query-gallery identity checks are source-conditional and do not establish
-  separation from BioCLIP pretraining.
+  reference gallery.
+- Query-gallery checks do not establish separation from BioCLIP pretraining.
 - Closed-set ranking is not open-set abstention.
+- Machine verification and rollback apply to deposited tensors, row maps, ledgers,
+  manifests, and byte-complete objects; pixel re-encoding is conditional on source
+  bytes or successful pointer reconstruction.
 
 See [Scientific scope](docs/SCIENTIFIC_SCOPE.md) and
-[Benchmark roles](docs/BENCHMARKS.md) for the complete interpretation boundary.
+[Benchmark roles](docs/BENCHMARKS.md) for the full interpretation boundary.
 
 ## Repository contents
 
@@ -121,31 +133,29 @@ See [Scientific scope](docs/SCIENTIFIC_SCOPE.md) and
 - [Rights and licensing](docs/RIGHTS_AND_LICENSING.md)
 - [Citation](CITATION.md)
 - [Version map](VERSION.md)
-- [Agent operating contract](AGENTS.md)
-- [`download_release.py`](scripts/download_release.py): pinned, profile-aware downloader
+- [`download_release.py`](scripts/download_release.py): pinned base-release downloader
+- [`verify_analysis_evidence.py`](scripts/verify_analysis_evidence.py): REV035 evidence verifier
 - [`verify_bioclip_pipeline.py`](scripts/verify_bioclip_pipeline.py): one-record encoder/index smoke test
 
-Run the documentation consistency check with:
+Run the repository consistency checks with:
 
 ```bash
 python3 scripts/check_public_docs.py
+python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-## Licensing
+## Licensing and citation
 
-Project-authored verification and reproduction software is licensed under
-Apache-2.0. Project-authored explanatory documentation is licensed under CC BY 4.0.
-Third-party images, metadata, and database content remain governed by their
-file-specific or row-level rights information. See [Licence scope](LICENSE.md) and
-[Rights and licensing](docs/RIGHTS_AND_LICENSING.md).
+Project-authored software is Apache-2.0 and project-authored explanatory
+documentation is CC BY 4.0. Third-party images, metadata, and database content
+remain governed by their file-specific or row-level rights information; byte
+completeness is an integrity class, not a blanket licence.
 
-## Citation
+> COVER-Fish. (2026). *COVER-Fish* (Version 4e437b6) [Dataset]. Hugging Face.
+> <https://doi.org/10.57967/HF/9776>
 
-The dataset citation is:
-
-> COVER-Fish. (2026). *COVER-Fish* (Version 0ee47b2) [Dataset]. Hugging Face.
-> <https://doi.org/10.57967/HF/9706>
+See [CITATION.md](CITATION.md) for BibTeX and the separate historical-base citation.
 
 Liang Li (ORCID [`0009-0004-0467-7032`](https://orcid.org/0009-0004-0467-7032))
-is the manuscript author and contact. Dataset and manuscript citation details are
-kept separate in [CITATION.md](CITATION.md).
+is the manuscript author and contact. Dataset and manuscript citations remain
+separate in [CITATION.md](CITATION.md).

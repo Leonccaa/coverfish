@@ -69,8 +69,9 @@ cd coverfish-pointer-audit-supplement/supplements/pointer-audit-v04-20260726
 sha256sum -c SHA256SUMS
 ```
 
-The existing DOI continues to identify the frozen base dataset. No separate DOI
-was minted for this dated supplement.
+The historical DOI `10.57967/hf/9706` continues to identify the frozen base dataset.
+No separate DOI was minted for this dated supplement; the later paper-aligned DOI
+incorporates the receipt files without changing them.
 
 ## Offline smoke test
 
