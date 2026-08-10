@@ -158,7 +158,8 @@ reject or roll back the Commons transition.
 - Commons photo suitability is not taxonomic verification.
 - Exact-ranking resource figures are not a complete deployment or concurrency
   benchmark.
-- The paper-aligned dataset snapshot is publicly accessible at commit
-  `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`, DOI
-  `10.57967/hf/9776`. The earlier base remains historical provenance at
-  `10.57967/hf/9706`.
+- QT26-QC, the Reference-Update Benchmark and the Commons Scale-Out Layer are
+  independently citable Zenodo publication objects at `10.5281/zenodo.21734785`,
+  `10.5281/zenodo.21735011` and `10.5281/zenodo.21386770`. Earlier immutable Hugging Face
+  snapshots remain historical provenance and fallback access, as documented in
+  [Archive history](ARCHIVE_HISTORY.md).

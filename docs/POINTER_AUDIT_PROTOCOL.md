@@ -3,7 +3,7 @@
 ## Immutable scope
 
 The audit measures dated availability for the `42,387` pointer rows in the
-REV023-RC2 archive: `41,945` active and `442` retired. It does not alter the
+frozen archive: `41,945` active and `442` retired. It does not alter the
 DOI-bound dataset, query or gallery membership, prototypes, embeddings,
 predictions, scores, benchmark rosters, or frozen reproducibility tiers.
 

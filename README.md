@@ -8,8 +8,9 @@ fail. The study reconstructs four staged iNaturalist reference-gallery updates,
 then tests later source layers while holding the encoder, preprocessing,
 aggregation, queries, and scoring fixed.
 
-[Dataset](https://huggingface.co/datasets/COVER-Fish/COVER-Fish) ·
-[DOI](https://doi.org/10.57967/hf/9776) ·
+[QT26-QC evaluation roster](docs/DATA_AVAILABILITY.md#qt26-qc-evaluation-roster) ·
+[Reference-Update Benchmark](docs/DATA_AVAILABILITY.md#reference-update-benchmark) ·
+[Commons Scale-Out Layer](docs/DATA_AVAILABILITY.md#commons-scale-out-layer) ·
 [Data availability](docs/DATA_AVAILABILITY.md) ·
 [Reproduction](docs/REPRODUCTION.md) ·
 [Citation](CITATION.md)
@@ -55,31 +56,46 @@ outside Fishial's vocabulary, COVER-Fish has target support for 4,696 and identi
 1,853 correctly at top-1. These numbers establish expanded task support, not
 Fishial accuracy outside its scope.
 
-## Public release
+## Public data objects
 
-The current paper-aligned release is hosted at
-[`COVER-Fish/COVER-Fish`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish):
+COVER-Fish separates the reusable evaluation set, the reference-update research
+environment, and its large Commons source layer into three canonical Zenodo
+records:
 
-- DOI: [`10.57967/hf/9776`](https://doi.org/10.57967/hf/9776);
-- DOI snapshot commit: `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`;
-- manuscript alignment: `REV035`;
-- clean active gallery: 107,722 rows / 19,144 species prototypes; and
-- archive surface: 117,640 records (75,253 byte-bearing; 42,387 pointer rows).
+| Object | Use it for | Stable identity |
+| --- | --- | --- |
+| QT26-QC | Evaluate a fish-recognition model on the fixed 6,719-query roster | Zenodo DOI `10.5281/zenodo.21734785` |
+| COVER-Fish Reference-Update Benchmark | Replay gallery states, aggregation rules and transition ledgers | Zenodo DOI `10.5281/zenodo.21735011` |
+| COVER-Fish Commons Scale-Out Layer | Download the S4 manifest or independently extractable licence-tier image archives | Zenodo DOI `10.5281/zenodo.21386770` |
 
-The release preserves the earlier 83 GB archives byte-for-byte and adds compact
-REV035 analysis evidence under
-[`supplements/analysis-evidence/`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/4e437b6a2bf5f9a12a200bbe3a93411fe713db1f/supplements/analysis-evidence).
-Its deterministic archive contains 169 artifacts across 13 analysis modules;
-`CLAIM-ARTIFACT-LEDGER.tsv` maps 14 manuscript claims to those files. The archive's
-SHA-256 is
-`a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01`.
+QT26-QC is directly loadable and exposes one canonical scoring split:
 
-The earlier base release remains citable as historical provenance at DOI
-[`10.57967/hf/9706`](https://doi.org/10.57967/hf/9706), tag
-`rev023-rc2-20260714`, and commit
-`0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`. The dated pointer-audit supplement
-remains fixed at tag `pointer-audit-v04-20260726` and commit
-`70284660ee40128ff1d34ccec12e5c3e78f83f25`.
+```python
+from datasets import load_dataset
+
+test = load_dataset("COVER-Fish/QT26-QC", split="test")
+```
+
+Its 6,719 image byte payloads are byte-identical across the Parquet and E0
+representations. The separate 6,734-row parent roster is construction lineage,
+not a second scoring split. A Hugging Face access mirror supports the one-line
+`load_dataset()` path; Zenodo remains the canonical citation surface.
+
+The Reference-Update Benchmark publishes the source archives required for replay,
+frozen CORE tensors, manifests, gallery-state membership, protocols, ledgers and
+verification tools. Its final clean view contains 107,722 gallery rows represented
+by 19,144 species prototypes. The Commons companion publishes three licence-tier archives;
+its 26,454-row crosswalk verifies that their image byte sequences match the
+canonical S4 row set.
+
+The same Reference-Update record carries three compact verification packages. A
+claim ledger maps 14 manuscript claims to 169 frozen artifacts across 13 modules;
+a separately implemented frozen-result audit passed all 3,639 checks; and the
+complete dated pointer-audit receipts remain available for direct inspection.
+
+Earlier Hugging Face DOI snapshots remain available as immutable historical
+fallbacks. They are documented in [Archive history](docs/ARCHIVE_HISTORY.md), not
+presented as alternative current citations.
 
 ## Reproduce and verify
 
@@ -89,11 +105,13 @@ The base-release downloader remains pinned to the historical immutable base:
 python3 scripts/download_release.py plan --profile smoke
 ```
 
-To verify the compact paper-aligned analysis layer after downloading its six files:
+To verify the compact claim-level evidence after downloading
+`cover-fish-analysis-evidence-v1.tar.zst` from the Reference-Update record:
 
 ```bash
+tar --zstd -xf cover-fish-analysis-evidence-v1.tar.zst
 python3 scripts/verify_analysis_evidence.py \
-  --root supplements/analysis-evidence
+  --root cover-fish-analysis-evidence-v1/release
 ```
 
 The complete 83,253,466,397-byte base surface and every profile of 5 GB or more
@@ -131,10 +149,11 @@ See [Scientific scope](docs/SCIENTIFIC_SCOPE.md) and
 - [Reproduction](docs/REPRODUCTION.md)
 - [Pointer reconstruction audit](docs/POINTER_AUDIT.md)
 - [Rights and licensing](docs/RIGHTS_AND_LICENSING.md)
+- [Archive history](docs/ARCHIVE_HISTORY.md)
 - [Citation](CITATION.md)
 - [Version map](VERSION.md)
 - [`download_release.py`](scripts/download_release.py): pinned base-release downloader
-- [`verify_analysis_evidence.py`](scripts/verify_analysis_evidence.py): REV035 evidence verifier
+- [`verify_analysis_evidence.py`](scripts/verify_analysis_evidence.py): paper evidence verifier
 - [`verify_bioclip_pipeline.py`](scripts/verify_bioclip_pipeline.py): one-record encoder/index smoke test
 
 Run the repository consistency checks with:
@@ -151,10 +170,9 @@ documentation is CC BY 4.0. Third-party images, metadata, and database content
 remain governed by their file-specific or row-level rights information; byte
 completeness is an integrity class, not a blanket licence.
 
-> COVER-Fish. (2026). *COVER-Fish* (Version 4e437b6) [Dataset]. Hugging Face.
-> <https://doi.org/10.57967/HF/9776>
-
-See [CITATION.md](CITATION.md) for BibTeX and the separate historical-base citation.
+See [CITATION.md](CITATION.md) for the four citation branches: QT26-QC queries,
+reference-update states and tensors, Commons source data, and the paper's
+scientific claims.
 
 Liang Li (ORCID [`0009-0004-0467-7032`](https://orcid.org/0009-0004-0467-7032))
 is the manuscript author and contact. Dataset and manuscript citations remain

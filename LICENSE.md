@@ -34,7 +34,7 @@ The licences above apply only where the COVER-Fish project owns the relevant rig
 They do not relicense third-party images, metadata, database records, taxonomic
 content, contributor names, attributions, URLs, or incorporated material.
 
-The Hugging Face dataset card therefore remains `license: other`. Row-level source,
+The mixed-rights data records therefore use `license: other`. Row-level source,
 provenance, creator/attribution, URL, licence, and rights fields are authoritative
 for data records. `Byte-complete` describes integrity, not permission. `Pointer`
 describes the absence of hosted image bytes, not a grant to fetch or reuse them.

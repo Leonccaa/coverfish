@@ -6,24 +6,33 @@ frozen.
 
 ## Safe order of operations
 
-1. Run `python3 scripts/download_release.py plan --profile smoke`.
-2. Parse the single JSON object from stdout. Logs and progress belong to stderr.
-3. Download only the requested profile. Never add `--accept-large-download` unless
+1. Use the QT26-QC Zenodo record and its canonical `test` split for model
+   evaluation; do not score the 6,734-row construction parent. The Hugging Face
+   mirror is an optional access path.
+2. Use the Reference-Update Zenodo record for gallery-state, aggregation and
+   transition-ledger replay.
+3. Use the Commons Zenodo record for S4 manifests or licence-tier image archives.
+4. Use historical Hugging Face payload snapshots only when an older frozen object
+   is explicitly required.
+5. Run `python3 scripts/download_release.py plan --profile smoke` for the historical
+   base downloader.
+6. Parse the single JSON object from stdout. Logs and progress belong to stderr.
+7. Download only the requested profile. Never add `--accept-large-download` unless
    the operator has approved the reported byte count and destination capacity.
-4. Run `verify` and require `status == "PASS"` before extracting an archive.
-5. Extract CORE and D0 into separate directories.
-6. Run `verify_bioclip_pipeline.py plan` before allowing the approximately 3.95 GB
+8. Run `verify` and require `status == "PASS"` before extracting an archive.
+9. Extract CORE and D0 into separate directories.
+10. Run `verify_bioclip_pipeline.py plan` before allowing the approximately 3.95 GB
    pinned model transfer.
-7. Treat the model result as a one-record pipeline smoke test, not as a full-paper
+11. Treat the model result as a one-record pipeline smoke test, not as a full-paper
    reproduction.
-8. Keep the default CPU execution. Never request `--device cuda` without explicit
+12. Keep the default CPU execution. Never request `--device cuda` without explicit
    operator approval for accelerator use.
-9. Treat `download_release.py` as a downloader for the historical immutable base;
-   it does not fetch the later analysis-evidence supplement.
-10. For REV035 claim evidence, download only
-    `supplements/analysis-evidence/*` at revision
-    `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`, then run
-    `python3 scripts/verify_analysis_evidence.py --root supplements/analysis-evidence`.
+13. Treat `download_release.py` as a downloader for the historical immutable base;
+    it does not fetch the current verification supplements.
+14. For paper claim evidence, download
+    `cover-fish-analysis-evidence-v1.tar.zst` from the Reference-Update Zenodo
+    record, extract it, then run
+    `python3 scripts/verify_analysis_evidence.py --root cover-fish-analysis-evidence-v1/release`.
 
 ## Pointer-audit order of operations
 
@@ -45,24 +54,27 @@ frozen.
 8. Verify each closed receipt offline, then verify the disjoint pair. Treat
    receipt integrity status and `scientific_status` as separate fields.
 9. Pointer-audit commands do not require a GPU; do not add accelerator use.
-10. For the published reference receipts, resolve immutable tag
-    `pointer-audit-v04-20260726`, download only
-    `supplements/pointer-audit-v04-20260726/*`, and require
-    `sha256sum -c SHA256SUMS` to pass.
+10. For the published reference receipts, download
+    `cover-fish-pointer-audit-receipts-v1.tar.zst` from the Reference-Update
+    Zenodo record and require `sha256sum -c SHA256SUMS` to pass after extraction.
 
 ## Invariants
 
-- Current paper-aligned dataset snapshot:
-  `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`.
-- Current dataset DOI: `10.57967/hf/9776`.
-- Analysis-evidence archive SHA-256:
-  `a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01`.
+- QT26-QC DOI: `10.5281/zenodo.21734785`.
+- Reference-Update Benchmark DOI: `10.5281/zenodo.21735011`.
+- Commons Scale-Out Layer DOI: `10.5281/zenodo.21386770`.
+- Historical payload DOI citations are listed only in `docs/ARCHIVE_HISTORY.md`;
+  operational bindings may still use their immutable revisions and tags.
+- Analysis-evidence wrapper SHA-256:
+  `30d6ae64149f7f51d404c3932d5b139e546d5c669b0515e3d2c781d517b00cea`.
+- Frozen-result audit wrapper SHA-256:
+  `0d7db77cb9bd6bce6f07b38a9e02df591a7554e2f4c24acfbd30fd832bb6b8b1`.
+- Pointer-audit receipt wrapper SHA-256:
+  `aa05519748fcf585abeb816e0960d95eaa3cb6093872c1a87e7125b0c62d3755`.
 - Historical base revision: `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`.
 - Historical base tag: `rev023-rc2-20260714`.
-- Historical base DOI: `10.57967/hf/9706`.
-- Pointer-audit supplement tag: `pointer-audit-v04-20260726`.
-- Pointer-audit supplement revision:
-  `70284660ee40128ff1d34ccec12e5c3e78f83f25`.
+- Historical pointer-audit tag and revision are provenance fields documented in
+  `docs/ARCHIVE_HISTORY.md`, not current download dependencies.
 - BioCLIP revision: `191d741545e4c741cdef4b22c6eb69c945c1e592`.
 - Q-INT/D0 is the development benchmark; QT26-QC/E0 is the fixed primary
   evaluation benchmark. Do not pool them.

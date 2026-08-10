@@ -28,6 +28,7 @@ REQUIRED_FILES = (
     "docs/POINTER_AUDIT_PROTOCOL.md",
     "docs/POINTER_SOURCE_POLICY.md",
     "docs/RIGHTS_AND_LICENSING.md",
+    "docs/ARCHIVE_HISTORY.md",
     "AGENTS.md",
     ".gitignore",
     "requirements-model.txt",
@@ -73,17 +74,19 @@ REQUIRED_README_TEXT = (
     "1,853",
     "5.95",
     "3.52",
-    "117,640",
-    "75,253",
     "42,387",
-    "10.57967/hf/9706",
-    "10.57967/hf/9776",
-    "4e437b6a2bf5f9a12a200bbe3a93411fe713db1f",
-    "Version 4e437b6",
-    "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01",
+    "3,639",
+    "cover-fish-analysis-evidence-v1.tar.zst",
+    "COVER-Fish/QT26-QC",
+    "COVER-Fish Reference-Update Benchmark",
+    "COVER-Fish Commons Scale-Out Layer",
+    "10.5281/zenodo.21734785",
+    "10.5281/zenodo.21735011",
+    "10.5281/zenodo.21386770",
+    "6,734-row parent roster",
+    'load_dataset("COVER-Fish/QT26-QC", split="test")',
     "Hugging Face",
-    "0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8",
-    "rev023-rc2-20260714",
+    "Archive history",
     "Liang Li",
     "Apache-2.0",
     "CC BY 4.0",
@@ -490,7 +493,7 @@ def check_tool_contract(errors: list[str]) -> None:
     if analysis["TOOL_VERSION"] != "1.0.0":
         errors.append("analysis-evidence verifier version changed")
     if analysis["EXPECTED_ALIGNMENT"] != "REV035":
-        errors.append("analysis-evidence manuscript alignment changed")
+        errors.append("frozen nested analysis-evidence alignment changed")
     if analysis["EXPECTED_MODULES"] != 13:
         errors.append("analysis-evidence module count changed")
     if analysis["EXPECTED_ARTIFACTS"] != 169:
@@ -568,16 +571,17 @@ def check_claims(errors: list[str]) -> None:
 
     citation = (ROOT / "CITATION.md").read_text(encoding="utf-8")
     for token in (
-        "10.57967/HF/9776",
-        "10.57967/HF/9706",
-        "COVER-Fish` (`Organizational`)",
-        "Version 4e437b6",
-        "Version 0ee47b2",
-        "Hugging Face",
-        "4e437b6a2bf5f9a12a200bbe3a93411fe713db1f",
+        "10.5281/zenodo.21734785",
+        "10.5281/zenodo.21735011",
+        "10.5281/zenodo.21386770",
+        "QT26-QC: A Temporally Bounded Fish Recognition Evaluation Roster",
+        "COVER-Fish Reference-Update Benchmark",
+        "COVER-Fish Commons Scale-Out Layer",
+        "Zenodo",
+        "docs/ARCHIVE_HISTORY.md",
     ):
         if token not in citation:
-            errors.append(f"CITATION.md: missing verified DOI token: {token!r}")
+            errors.append(f"CITATION.md: missing canonical citation token: {token!r}")
 
     availability = (ROOT / "docs/DATA_AVAILABILITY.md").read_text(encoding="utf-8")
     for token in (
@@ -593,15 +597,32 @@ def check_claims(errors: list[str]) -> None:
         "169 artifacts across 13 modules",
         "14-claim",
         "a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01",
-        "10.57967/hf/9776",
-        "4e437b6a2bf5f9a12a200bbe3a93411fe713db1f",
-        "DataCite version: `4e437b6`",
+        "30d6ae64149f7f51d404c3932d5b139e546d5c669b0515e3d2c781d517b00cea",
+        "3,639 of 3,639 checks",
+        "0d7db77cb9bd6bce6f07b38a9e02df591a7554e2f4c24acfbd30fd832bb6b8b1",
+        "aa05519748fcf585abeb816e0960d95eaa3cb6093872c1a87e7125b0c62d3755",
+        "10.5281/zenodo.21734785",
+        "10.5281/zenodo.21735011",
+        "10.5281/zenodo.21386770",
+        "26,454-row source-to-tier crosswalk",
+        "Zenodo is the canonical DOI and citation surface",
+        "Archive history",
     ):
         if token not in availability:
             errors.append(f"docs/DATA_AVAILABILITY.md: missing release token: {token!r}")
 
+    archive_history = (ROOT / "docs/ARCHIVE_HISTORY.md").read_text(encoding="utf-8")
+    for token in (
+        "10.57967/hf/9776",
+        "10.57967/hf/9706",
+        "immutable historical payload snapshot",
+        "not competing current citation",
+    ):
+        if token not in archive_history:
+            errors.append(f"docs/ARCHIVE_HISTORY.md: missing history token: {token!r}")
+
     if (ROOT / "CITATION.cff").exists():
-        errors.append("CITATION.cff is outside the approved REV035 alignment surface")
+        errors.append("CITATION.cff is outside the current publication surface")
 
 
 def main() -> int:
