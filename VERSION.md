@@ -2,7 +2,7 @@
 
 | Surface | Version |
 | --- | --- |
-| GitHub documentation/code alignment | publication candidate, `release/v4-dataset-publication`, 2026-08-04 |
+| GitHub documentation/code alignment | Zenodo-first publication baseline, 2026-08-10 |
 | Companion manuscript | submission baseline |
 | QT26-QC Zenodo DOI / version | `10.5281/zenodo.21734785` / `1.0.0` |
 | Reference-Update Zenodo DOI / version | `10.5281/zenodo.21735011` / `1.0.0` |

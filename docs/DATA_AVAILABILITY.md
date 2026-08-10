@@ -127,8 +127,8 @@ Zenodo is the canonical DOI and citation surface for QT26-QC, Reference-Update,
 and Commons. Hugging Face provides a convenient QT26-QC access mirror and retains
 historical immutable snapshots. GitHub carries lightweight documentation,
 scientific and benchmark scope, rights information, citation metadata, and public
-verification code. A fixed GitHub content commit will be inserted before
-submission so the code citation does not resolve to a moving branch.
+verification code. The manuscript and Zenodo metadata bind this software surface
+to a fixed public content commit rather than a moving branch.
 
 GitHub Git and GitHub Releases do not mirror the large data archives. Row-level
 source, attribution, URL, licence, and rights fields remain authoritative for
