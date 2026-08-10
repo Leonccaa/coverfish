@@ -33,7 +33,7 @@ The strict byte-exact rates are 98.8912% for the archive and 98.8819% for the
 active set. The pHash row is diagnostic and is not counted as byte-exact.
 R0/S1 is 34,088/34,088 byte-exact. E0/QT26-QC remains independently
 6,719/6,719 byte-complete with no pointer-dependent row. This dated observation
-does not retroactively upgrade the frozen RC2 tier table.
+does not retroactively upgrade the frozen release-tier table.
 
 A direct-only second observation ran from `2026-07-27T04:49:28Z` through
 `2026-07-27T04:50:11Z`. It selected the same 18 HTTP 404/410 rows and made one
@@ -44,34 +44,29 @@ receipt pair.
 
 ## Published receipts
 
-The complete receipt and the direct-only recheck are published on Hugging Face:
+The Reference-Update Zenodo record publishes
+`cover-fish-pointer-audit-receipts-v1.tar.zst` (12,226,488 bytes; SHA-256
+`aa05519748fcf585abeb816e0960d95eaa3cb6093872c1a87e7125b0c62d3755`).
+It contains:
 
-- supplement tag: [`pointer-audit-v04-20260726`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/pointer-audit-v04-20260726/supplements/pointer-audit-v04-20260726);
-- supplement revision: `70284660ee40128ff1d34ccec12e5c3e78f83f25`;
-- complete receipt: `coverfish-pointer-audit-v04-receipts-rc1-20260726.tar`,
+- complete receipt: `complete-pointer-audit-receipts.tar`,
   81,162,240 bytes, SHA-256
   `d754587cfed6fd42277192d0887ad6413fd5343d10a926c42145df9bad665181`;
-- direct recheck: `coverfish-pointer-404-direct-recheck-local-rc1-20260726.tar`,
+- direct recheck: `direct-404-recheck-receipts.tar`,
   51,200 bytes, SHA-256
   `bfd7afccb335605e2d279f89abb574dc1b0fca4d1628e3aa5365c432739a0493`.
 
-Download only this supplement with the Hugging Face CLI, then verify both
-payloads locally:
+After downloading the compact package, verify its contents locally:
 
 ```bash
-hf download COVER-Fish/COVER-Fish \
-  --repo-type dataset \
-  --revision pointer-audit-v04-20260726 \
-  --include "supplements/pointer-audit-v04-20260726/*" \
-  --local-dir coverfish-pointer-audit-supplement
-
-cd coverfish-pointer-audit-supplement/supplements/pointer-audit-v04-20260726
+tar --zstd -xf cover-fish-pointer-audit-receipts-v1.tar.zst
+cd cover-fish-pointer-audit-receipts-v1
 sha256sum -c SHA256SUMS
 ```
 
-The historical DOI `10.57967/hf/9706` continues to identify the frozen base dataset.
-No separate DOI was minted for this dated supplement; the later paper-aligned DOI
-incorporates the receipt files without changing them.
+The receipt retains the immutable source snapshot identifiers used when the audit
+ran. They are provenance labels rather than current download dependencies; see
+[Archive history](ARCHIVE_HISTORY.md).
 
 ## Offline smoke test
 

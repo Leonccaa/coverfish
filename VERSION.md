@@ -2,17 +2,14 @@
 
 | Surface | Version |
 | --- | --- |
-| GitHub documentation/code alignment | REV035, `agent/rev035-release-alignment`, 2026-07-28 |
-| Companion manuscript | REV035 |
-| Current paper-aligned dataset snapshot | `4e437b6a2bf5f9a12a200bbe3a93411fe713db1f` |
-| Current dataset DOI | `10.57967/hf/9776` |
-| Current DataCite version | `4e437b6` |
-| Analysis-evidence archive SHA-256 | `a83cea63de116c6b895551401f55a97af9b38bcc750006063a217aae44022a01` |
-| Historical base DOI | `10.57967/hf/9706` |
-| Historical base tag | `rev023-rc2-20260714` |
-| Historical base revision | `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8` |
-| Pointer-audit supplement tag | `pointer-audit-v04-20260726` |
-| Pointer-audit supplement revision | `70284660ee40128ff1d34ccec12e5c3e78f83f25` |
+| GitHub documentation/code alignment | publication candidate, `release/v4-dataset-publication`, 2026-08-04 |
+| Companion manuscript | submission baseline |
+| QT26-QC Zenodo DOI / version | `10.5281/zenodo.21734785` / `1.0.0` |
+| Reference-Update Zenodo DOI / version | `10.5281/zenodo.21735011` / `1.0.0` |
+| Commons Scale-Out Zenodo DOI / version | `10.5281/zenodo.21386770` / `1.0.0` |
+| Claim-evidence wrapper SHA-256 | `30d6ae64149f7f51d404c3932d5b139e546d5c669b0515e3d2c781d517b00cea` |
+| Frozen-result audit wrapper SHA-256 | `0d7db77cb9bd6bce6f07b38a9e02df591a7554e2f4c24acfbd30fd832bb6b8b1` |
+| Pointer-audit receipt wrapper SHA-256 | `aa05519748fcf585abeb816e0960d95eaa3cb6093872c1a87e7125b0c62d3755` |
 | Base-release downloader and model-smoke CLI schema | `1.0.0` |
 | Analysis-evidence verifier | `1.0.0` |
 | Pointer scientific producer | `0.2.0` |
@@ -21,18 +18,19 @@
 | Pointer pair verifier | `0.1.2` |
 | Pointer minimal-fixture verifier | `0.2.0` |
 
-REV035 changes the manuscript interpretation, compact evidence surface, and public
-documentation. It does not alter the frozen query rosters, gallery membership,
-embeddings, prototypes, canonical predictions, or base archive bytes. The current
-DOI snapshot adds stable semantic files under `supplements/analysis-evidence/`; the
-large archives retain their original filenames and hashes so the historical base
-remains independently verifiable.
+The current publication layer does not change the scientific objects. QT26-QC
+exposes the canonical 6,719-query E0 roster as byte-identical Parquet shards; the
+Reference-Update Benchmark exposes manifests, states, ledgers, protocols, source
+archives and frozen tensors; Commons exposes independently extractable licence-tier
+archives with a 26,454-row equivalence crosswalk. Frozen query membership, gallery
+membership, embeddings, prototypes, predictions and paper estimates are unchanged.
 
-The base downloader remains intentionally pinned to the old immutable base commit.
-The separate analysis-evidence verifier is bound to the current compact archive.
-The dated pointer audit remains an observation layer and does not upgrade the frozen
-release tiers.
+The base downloader remains intentionally pinned to the old immutable fallback.
+The separate analysis-evidence verifier is bound to the frozen nested release in
+the current wrapper. The dated pointer audit remains an observation layer and does
+not upgrade the frozen release tiers.
 
-The GitHub repository is intentionally lightweight. Hugging Face is the
-authoritative data surface; GitHub Git and Releases do not mirror image archives or
-tensor bundles.
+The GitHub repository is intentionally lightweight. Zenodo is the canonical data
+and DOI surface; GitHub Git and Releases do not mirror image archives or tensor
+bundles. Earlier Hugging Face snapshots are documented separately in
+[Archive history](docs/ARCHIVE_HISTORY.md).

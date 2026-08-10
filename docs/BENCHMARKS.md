@@ -6,8 +6,8 @@ successive versions of one test set, and their numbers must not be pooled.
 | Object | Frozen denominator | Role in the paper | Public availability now |
 | --- | ---: | --- | --- |
 | Fishial1300 | 1,300 = 1,200 positives + 100 distractors | Historical engineering initialization and spillover discovery | Not distributed here |
-| Q-INT / D0 | 1,044 = 946 positives + 98 distractors; 562 positive target taxa | Development-only encoder and aggregation selection; open-set diagnostic | Included in the public tagged Hub package |
-| QT26-QC / E0 | 6,719 queries / 3,121 taxa | Fixed primary current evaluation roster | Included in the public tagged Hub package |
+| Q-INT / D0 | 1,044 = 946 positives + 98 distractors; 562 positive target taxa | Development-only encoder and aggregation selection; open-set diagnostic | Included in the Reference-Update Zenodo record |
+| QT26-QC / E0 | 6,719 queries / 3,121 taxa | Fixed primary current evaluation roster | Canonical Zenodo record `10.5281/zenodo.21734785`; directly loadable mirror at [`COVER-Fish/QT26-QC`](https://huggingface.co/datasets/COVER-Fish/QT26-QC) |
 | Broad QT26 | 133,041 queries / 4,264 taxa | Query-frequency-imbalanced sensitivity analysis | Not the current public-package object |
 | Fishial candidate-restricted subset | 1,931 queries / 665 species; 775-name candidate universe | Native-pipeline system comparison | Predictions and compact evidence are in the analysis supplement |
 | FishNet | 18,901 fixed natural-photo queries | Third-party transfer benchmark | Upstream benchmark; not repackaged here |
@@ -32,6 +32,10 @@ scientific role.
 QT26-QC is the primary quality-controlled, stratified roster. It keeps no more than
 five queries per represented taxon and retains unmapped or structurally unsupported
 queries in the full denominator as wrong.
+
+The independent dataset exposes one canonical `test` split of 6,719 rows. Its
+6,734-row construction parent and the 15-row Q-INT overlap exclusion are lineage
+objects, not alternative scoring splits.
 
 The temporal claim is narrow and image-specific. Active iNat-RG-Pre evidence must
 pass three pre-1-March-2026 image clocks, while QT26-QC observations begin after the

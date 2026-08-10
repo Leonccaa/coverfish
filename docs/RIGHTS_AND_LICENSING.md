@@ -35,12 +35,18 @@ ANGFA remains pointer-only unless separate permission is obtained. Other source
 packs can contain a mixture of byte and pointer rows. Aggregate source names or
 counts never replace the row-level terms in an authorized release manifest.
 
+QT26-QC retains the source licence and attribution on every query row; its dataset
+card uses `license: other` because no single blanket licence replaces those terms.
+The Reference-Update Benchmark publishes `rows-by-licence/` as row-ID selection
+lists. Those lists make the rights ledger filterable after a user obtains the
+relevant source archive; they are not separately downloadable image packs.
+
 ## Current repository boundary
 
 This GitHub documentation baseline contains no third-party image bytes, source-row
 manifests, upstream contributor identity values, embedding arrays, or private
-database records. The public Hugging Face package is a separate mixed-rights
-surface; this GitHub baseline neither mirrors its payloads nor relicenses them.
+database records. The canonical Zenodo records are separate mixed-rights data
+surfaces; this GitHub baseline neither mirrors their payloads nor relicenses them.
 
 The pointer tools retrieve bounded response bodies only for in-memory integrity
 and diagnostic checks and discard them. A receipt records dated observations;

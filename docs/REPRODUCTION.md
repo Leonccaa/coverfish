@@ -12,33 +12,55 @@ The check verifies required files, repository-relative links, frozen headline
 values, release identifiers, licence texts, and the absence of private paths or
 service identifiers. It does not download data or recompute paper estimates.
 
-## REV035 analysis evidence
+## Load and score QT26-QC
 
-The DOI snapshot is
-`4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`. Download only the compact analysis
-layer without pulling the 83 GB base archives:
+The canonical evaluation split is directly loadable:
+
+```python
+from datasets import load_dataset
+
+test = load_dataset("COVER-Fish/QT26-QC", split="test")
+assert len(test) == 6_719
+```
+
+The dataset card links the fixed submission schema, FishBase 25.04 mapping rules,
+fixed-denominator scorer, 20,000-replicate species-cluster bootstrap, byte verifier
+and the byte-identical E0 archive path. The 6,734-row construction parent is metadata
+only and must not be substituted for `test`.
+
+## Reference-update replay
+
+The canonical control plane is published in the Reference-Update Zenodo record,
+DOI `10.5281/zenodo.21735011`. Its README separates two canonical tracks: gallery-state
+replay and aggregation replay. Source manifests, R0–R4 and later source-layer
+views, licence-aware row lists and transition ledgers are available without
+downloading image bytes.
+
+For the 16-query Level A fixture, download the control and frozen CORE archives
+from the same Zenodo record, then run its minimal replay example.
+
+## Paper analysis evidence
+
+Download `cover-fish-analysis-evidence-v1.tar.zst` from the Reference-Update
+Zenodo record without pulling the source-image archives:
 
 ```bash
-hf download COVER-Fish/COVER-Fish \
-  --repo-type dataset \
-  --revision 4e437b6a2bf5f9a12a200bbe3a93411fe713db1f \
-  --include "supplements/analysis-evidence/*" \
-  --local-dir coverfish-paper-release
-
+tar --zstd -xf cover-fish-analysis-evidence-v1.tar.zst
 python3 scripts/verify_analysis_evidence.py \
-  --root coverfish-paper-release/supplements/analysis-evidence
+  --root cover-fish-analysis-evidence-v1/release
 ```
 
 The verifier uses only the Python standard library plus GNU tar with zstd support.
 It checks the four files in the supplement checksum ledger, rejects unsafe archive
 paths, verifies all 169 rows in `ARTIFACT-INVENTORY.tsv`, confirms all 14 claim
-paths in `CLAIM-ARTIFACT-LEDGER.tsv`, and checks the REV035 release metadata. It
+paths in `CLAIM-ARTIFACT-LEDGER.tsv`, and checks the frozen release metadata. It
 does not execute the deposited analysis programs or recompute scores.
 
-## Pinned historical-base downloader
+## Optional historical-payload fallback
 
-The large-object downloader intentionally remains bound to the byte-identical
-historical base. Use tag `rev023-rc2-20260714` or fixed revision
+The large-object downloader remains available for the byte-identical historical
+Hugging Face fallback. It is not the current citation or dependency surface. Use
+tag `rev023-rc2-20260714` or fixed revision
 `0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`, rather than an unpinned moving branch.
 The package README, file map, `SHA256SUMS`, and offline verifiers define the expected
 inventory and integrity checks.
@@ -100,10 +122,9 @@ three days for the fixed two-shard workflow. Transient responses and later
 dated retry windows can extend those estimates. The audit does not change the
 frozen dataset or its reproducibility tiers.
 
-The complete dated receipt and the direct-only 18-row recheck are available
-under immutable Hugging Face tag
-[`pointer-audit-v04-20260726`](https://huggingface.co/datasets/COVER-Fish/COVER-Fish/tree/pointer-audit-v04-20260726/supplements/pointer-audit-v04-20260726).
-Download and checksum instructions are in [Pointer reconstruction
+The complete dated receipt and the direct-only 18-row recheck are included in
+`cover-fish-pointer-audit-receipts-v1.tar.zst` in the Reference-Update Zenodo
+record. Download and checksum instructions are in [Pointer reconstruction
 audit](POINTER_AUDIT.md#published-receipts).
 
 ## Extract the smoke inputs

@@ -1,48 +1,81 @@
 # Citation
 
-## Current paper-aligned dataset
+COVER-Fish uses three canonical Zenodo records with distinct citation roles.
+Cite the record or records whose data you actually use, and cite the manuscript
+separately for its scientific interpretation.
 
-DataCite records the dataset creator as `COVER-Fish` (`Organizational`). The
-recommended citation for the REV035-aligned release is:
+## QT26-QC evaluation roster
 
-> COVER-Fish. (2026). *COVER-Fish* (Version 4e437b6) [Dataset]. Hugging Face.
-> <https://doi.org/10.57967/HF/9776>
+Use this citation when evaluating a model on the canonical 6,719-query roster:
+
+> Liang Li. (2026). *QT26-QC: A Temporally Bounded Fish Recognition Evaluation
+> Roster* (Version 1.0.0) [Dataset]. Zenodo.
+> <https://doi.org/10.5281/zenodo.21734785>
 
 ```bibtex
-@misc{https://doi.org/10.57967/hf/9776,
-  doi = {10.57967/HF/9776},
-  url = {https://huggingface.co/datasets/COVER-Fish/COVER-Fish},
-  author = {{COVER-Fish}},
-  title = {COVER-Fish},
-  publisher = {Hugging Face},
-  year = {2026}
+@dataset{li2026qt26qc,
+  author = {Li, Liang},
+  title = {QT26-QC: A Temporally Bounded Fish Recognition Evaluation Roster},
+  publisher = {Zenodo},
+  year = {2026},
+  version = {1.0.0},
+  doi = {10.5281/zenodo.21734785},
+  url = {https://doi.org/10.5281/zenodo.21734785}
 }
 ```
 
-The DOI snapshot is Hub commit
-`4e437b6a2bf5f9a12a200bbe3a93411fe713db1f`. It preserves the earlier large
-archives byte-for-byte and adds the REV035 analysis-evidence layer.
+## COVER-Fish Reference-Update Benchmark
 
-## Historical base dataset
+Use this citation when using gallery states, frozen embeddings, transition
+ledgers, source manifests, or replay protocols:
 
-The earlier immutable base remains a separate historical citation object:
+> Liang Li. (2026). *COVER-Fish Reference-Update Benchmark* (Version
+> 1.0.0) [Dataset]. Zenodo.
+> <https://doi.org/10.5281/zenodo.21735011>
 
-> COVER-Fish. (2026). *COVER-Fish* (Version 0ee47b2) [Dataset]. Hugging Face.
-> <https://doi.org/10.57967/HF/9706>
+```bibtex
+@dataset{li2026coverfishreferenceupdate,
+  author = {Li, Liang},
+  title = {COVER-Fish Reference-Update Benchmark},
+  publisher = {Zenodo},
+  year = {2026},
+  version = {1.0.0},
+  doi = {10.5281/zenodo.21735011},
+  url = {https://doi.org/10.5281/zenodo.21735011}
+}
+```
 
-Its fixed identifiers are tag `rev023-rc2-20260714` and commit
-`0ee47b20fc0e767c8b3b9ef07ab55b37ac80b2f8`. Use the current DOI above for the
-paper-aligned package; use the old DOI only when citing the historical base itself.
+## COVER-Fish Commons Scale-Out Layer
+
+Use this citation when using the Commons images, source manifest, licence-tier
+archives, or S4 row-level crosswalk:
+
+> Liang Li. (2026). *COVER-Fish Commons Scale-Out Layer* (Version
+> 1.0.0) [Dataset]. Zenodo.
+> <https://doi.org/10.5281/zenodo.21386770>
+
+```bibtex
+@dataset{li2026coverfishcommons,
+  author = {Li, Liang},
+  title = {COVER-Fish Commons Scale-Out Layer},
+  publisher = {Zenodo},
+  year = {2026},
+  version = {1.0.0},
+  doi = {10.5281/zenodo.21386770},
+  url = {https://doi.org/10.5281/zenodo.21386770}
+}
+```
 
 ## Manuscript
 
 The companion manuscript is:
 
-> Liang Li. *COVER-Fish: Auditable Reference-Gallery Updates and Cross-Domain Sign
-> Reversal in Fish Recognition*. 2026.
+> Liang Li. *COVER-Fish: Auditable Reference-Gallery Updates and Cross-Domain
+> Sign Reversal in Fish Recognition*. 2026.
 
 Author identifier: [ORCID 0009-0004-0467-7032](https://orcid.org/0009-0004-0467-7032).
 
-The dataset and manuscript are distinct citation objects. The current DOI identifies
-the paper-aligned dataset snapshot; this GitHub repository provides lightweight
-documentation and verification code.
+The Zenodo records are the canonical data releases. Earlier Hugging Face DOI
+snapshots remain available only as immutable historical fallbacks; see
+[Archive history](docs/ARCHIVE_HISTORY.md). They are not alternative recommended
+citations for the current release.
